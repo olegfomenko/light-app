@@ -1,0 +1,5 @@
+[bindings.kotlin]
+package_name = "app.light.wallet.core"
+cdylib_name = "lightcore"
+android = true
+android_cleaner = true

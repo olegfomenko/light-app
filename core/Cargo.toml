@@ -1,0 +1,45 @@
+[package]
+name = "lightcore"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "lib"]
+name = "lightcore"
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+required-features = ["cli"]
+
+[features]
+cli = ["uniffi/cli"]
+
+[dependencies]
+gl-client = "0.6.0"
+# Already in gl-client's tree — used to read the description out of a
+# bolt11 when listpays doesn't store one (xpay does not persist it).
+lightning-invoice = "0.33"
+bip39 = { version = "2", features = ["rand_core"] }
+rand = "0.8"
+hex = "0.4"
+anyhow = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+uniffi = { version = "0.29", features = ["tokio"] }
+log = "0.4"
+zeroize = "1"
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.14"
+
+[build-dependencies]
+uniffi = { version = "0.29", features = ["build"] }
+
+# NB: no `strip = true` here — stripping removes the UniFFI metadata symbols
+# that uniffi-bindgen reads from the .so; AGP strips libs during packaging.
+# opt-level 3 (not "z"): the signer does real crypto on every RPC — optimizing
+# for size makes it burn measurably more CPU per operation.
+[profile.release]
+opt-level = 3
+lto = true

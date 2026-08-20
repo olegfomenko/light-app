@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#101418;font-family:Manrope,system-ui,sans-serif}
+a{color:#FACC15;text-decoration:none}a:hover{color:#FDE047}
+@keyframes vspin{to{transform:rotate(360deg)}}
+@keyframes vup{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes vfade{from{opacity:0}to{opacity:1}}
+@keyframes vpulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes vslideL{from{transform:translateX(46px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes vslideR{from{transform:translateX(-46px);opacity:0}to{transform:translateX(0);opacity:1}}
+input{outline:none}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 20px;box-sizing:border-box">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402,874">
+<div style="height:100%;position:relative;overflow:hidden;background:#0A0E12;color:#EEF3F6;font-family:Manrope,sans-serif">
+
+<!-- ══════════ ONBOARDING ══════════ -->
+<sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ true }}">
+<div style="height:100%;overflow:auto;display:flex;flex-direction:column;box-sizing:border-box;padding:78px 24px 40px">
+
+  <sc-if value="{{ ob0 }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;display:flex;flex-direction:column;animation:{{ obAnim }}">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+      <svg width="88" height="88" viewBox="0 0 1024 1024" style="border-radius:22px;box-shadow:0 0 60px rgba(250,204,21,.18)">
+        <defs>
+          <radialGradient id="wl1bg" cx=".5" cy=".42" r=".85"><stop offset="0" stop-color="#241C09"></stop><stop offset=".55" stop-color="#120E05"></stop><stop offset="1" stop-color="#070809"></stop></radialGradient>
+          <linearGradient id="wl1lt" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="#FFF085"></stop><stop offset="1" stop-color="#FACC15"></stop></linearGradient>
+          <linearGradient id="wl1dk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAB308"></stop><stop offset="1" stop-color="#B8860B"></stop></linearGradient>
+        </defs>
+        <rect width="1024" height="1024" fill="url(#wl1bg)"></rect>
+        <g fill="none" stroke="#FACC15"><circle cx="512" cy="512" r="170" stroke-opacity=".28" stroke-width="14"></circle><circle cx="512" cy="512" r="290" stroke-opacity=".18" stroke-width="12"></circle><circle cx="512" cy="512" r="420" stroke-opacity=".09" stroke-width="12"></circle></g>
+        <g transform="translate(204,214) scale(33)"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5" fill="#0A0803" opacity=".6"></polygon></g>
+        <g transform="translate(192,192) scale(33)"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19" fill="url(#wl1lt)"></polygon><polygon points="11,1 7.4,19 16,8.5 10.9,8.5" fill="url(#wl1dk)"></polygon></g>
+      </svg>
+      <div style="font:700 34px Space Grotesk,sans-serif;letter-spacing:-.5px">LightApp</div>
+      <div style="font-size:15px;color:#9FB0BC;text-align:center;line-height:1.6;max-width:300px">A full Core&nbsp;Lightning node in your pocket, powered by Greenlight. Built by Engineers for Engineers.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div onClick="{{ hGenWallet }}" style="height:54px;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer" style-hover="background:#FDE047">Create new wallet</div>
+      <div onClick="{{ hRestore }}" style="height:54px;border-radius:999px;border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#B7C2CC;cursor:pointer" style-hover="border-color:rgba(250,204,21,.5);color:#EEF3F6">Restore from seed</div>
+      <div onClick="{{ hSkipDemo }}" style="text-align:center;padding:8px;font-size:13.5px;color:#7E8B99;cursor:pointer" style-hover="color:#FACC15">Skip — explore with demo node</div>
+      <div style="text-align:center;font-size:12.5px;color:#5A6673;line-height:1.6;padding:2px 8px 0">LightApp is open source. We recommend double-checking the code at <span onClick="{{ hOpenGithub }}" style="color:#FACC15;font-weight:700;cursor:pointer;font-family:ui-monospace,monospace">github.com/olegfomenko/light-app</span> before using the application.</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob1 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;animation:{{ obAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif">Your recovery phrase</div>
+    <div style="font-size:14px;color:#9FB0BC;line-height:1.6;margin-top:8px">This BIP39 seed derives your node identity and on-chain keys. Write the 24 words down, in order, on paper.</div>
+    <div onClick="{{ hRevealMn }}" style="position:relative;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;cursor:pointer">
+      <sc-for list="{{ mnWords }}" as="w" hint-placeholder-count="24">
+        <div style="display:flex;align-items:center;gap:10px;background:#131A21;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px">
+          <span style="font:600 11px ui-monospace,monospace;color:#5A6673;width:14px">{{ w.i }}</span>
+          <span style="font:600 14px ui-monospace,monospace;color:#EEF3F6;filter:{{ mnBlur }}">{{ w.w }}</span>
+        </div>
+      </sc-for>
+      <sc-if value="{{ mnHidden }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="background:rgba(10,14,18,.85);border:1px solid rgba(250,204,21,.4);border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;color:#FACC15">Tap to reveal</div>
+        </div>
+      </sc-if>
+    </div>
+    <div style="margin-top:18px;background:rgba(250,204,21,.06);border:1px solid rgba(250,204,21,.18);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.65;color:#B7C2CC">
+      Write these words down — they are the only way to recover your wallet. They never leave this device.
+    </div>
+    <div onClick="{{ hCopySeedOb }}" style="margin-top:14px;height:46px;border-radius:999px;border:1px solid rgba(250,204,21,.35);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:13.5px;cursor:pointer" style-hover="background:rgba(250,204,21,.08)"><svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><path d="M8.5 3.5v-1a1.5 1.5 0 0 0-1.5-1.5H2.5A1.5 1.5 0 0 0 1 2.5V7a1.5 1.5 0 0 0 1.5 1.5h1"></path></svg>Copy seed</div>
+    <div style="flex:1"></div>
+    <div onClick="{{ hMnDone }}" style="margin-top:20px;height:54px;border-radius:999px;background:{{ mnBtnBg }};color:{{ mnBtnColor }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer">I wrote it down</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob4 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;animation:{{ obAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif">Restore from seed</div>
+    <div style="font-size:14px;color:#9FB0BC;line-height:1.6;margin-top:8px">Enter your 24-word recovery phrase. Paste the whole phrase into any field to fill them all.</div>
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <sc-for list="{{ rWordInputs }}" as="w" hint-placeholder-count="24">
+        <div style="display:flex;align-items:center;gap:8px;background:#131A21;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:3px 4px 3px 14px">
+          <span style="font:600 11px ui-monospace,monospace;color:#5A6673;width:14px;flex-shrink:0">{{ w.i }}</span>
+          <input value="{{ w.val }}" onChange="{{ w.set }}" spellcheck="false" autoCapitalize="none" style="width:100%;min-width:0;background:transparent;border:none;padding:8px 4px;color:#EEF3F6;font:600 14px ui-monospace,monospace" style-focus="outline:none">
+        </div>
+      </sc-for>
+    </div>
+    <div style="flex:1"></div>
+    <div onClick="{{ hRestoreNext }}" style="margin-top:20px;height:54px;border-radius:999px;background:{{ rBtnBg }};color:{{ rBtnC }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer">Continue</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob2 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;animation:{{ obAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif">Greenlight credentials</div>
+    <div style="font-size:14px;color:#9FB0BC;line-height:1.6;margin-top:8px">Upload the developer certificate pair from the <span onClick="{{ hOpenGlConsole }}" style="color:#FACC15;font-weight:700;cursor:pointer">Greenlight console</span>. They authorize this app to register and schedule your node.</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:22px">
+      <div onClick="{{ hCertCrt }}" style="display:flex;align-items:center;gap:14px;background:#131A21;border:1px dashed {{ crtBorder }};border-radius:16px;padding:16px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.6)">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center;font:700 10px ui-monospace,monospace;color:#FACC15">.crt</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+          <span style="font-weight:700;font-size:14px">client.crt</span>
+          <span style="font-size:13px;color:#7E8B99">{{ crtSub }}</span>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="{{ crtCheck }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"></path></svg>
+      </div>
+      <div onClick="{{ hCertKey }}" style="display:flex;align-items:center;gap:14px;background:#131A21;border:1px dashed {{ keyBorder }};border-radius:16px;padding:16px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.6)">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center;font:700 10px ui-monospace,monospace;color:#FACC15">.pem</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+          <span style="font-weight:700;font-size:14px">client-key.pem</span>
+          <span style="font-size:13px;color:#7E8B99">{{ keySub }}</span>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="{{ keyCheck }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5l3 3 6-7"></path></svg>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12.5px;color:#7E8B99;line-height:1.6">Keys are re-encrypted into the keystore after import; the plaintext files are wiped from app storage.</div>
+    <div style="flex:1"></div>
+    <div style="text-align:center;font-size:12.5px;color:#5A6673;line-height:1.6;padding:0 8px">Before you continue: this app is open source — double-check the code at <span onClick="{{ hOpenGithub }}" style="color:#FACC15;font-weight:700;cursor:pointer;font-family:ui-monospace,monospace">github.com/olegfomenko/light-app</span>.</div>
+    <div onClick="{{ hRegister }}" style="margin-top:14px;height:54px;border-radius:999px;background:{{ regBtnBg }};color:{{ regBtnColor }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;cursor:pointer">{{ regBtnLabel }}</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ ob3 }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;animation:{{ obAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif;margin-bottom:10px">{{ regTitle }}</div>
+    <sc-for list="{{ regRows }}" as="r" hint-placeholder-count="3">
+      <div style="display:flex;align-items:center;gap:14px;background:#131A21;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:15px 16px">
+        <div style="width:26px;height:26px;border-radius:50%;border:2px solid {{ r.ring }};display:flex;align-items:center;justify-content:center;font-size:13px;color:#FACC15;animation:{{ r.anim }}">{{ r.mark }}</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+          <span style="font-weight:700;font-size:14px;color:{{ r.color }}">{{ r.t }}</span>
+          <span style="font-size:12.5px;color:#7E8B99;font-family:ui-monospace,monospace">{{ r.sub }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  </sc-if>
+
+</div>
+</sc-if>
+
+<!-- ══════════ APP ══════════ -->
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="height:100%;display:flex;flex-direction:column;animation:vup .35s cubic-bezier(.22,.9,.3,1)">
+<div onTouchStart="{{ hSwipeStart }}" onTouchMove="{{ hSwipeMove }}" onTouchEnd="{{ hSwipeEnd }}" onMouseDown="{{ hDragStart }}" onMouseMove="{{ hDragMove }}" onMouseUp="{{ hDragEnd }}" onMouseLeave="{{ hDragEnd }}" style="flex:1;overflow:auto;overflow-x:hidden;padding:64px 18px 16px;box-sizing:border-box">
+<div style="height:{{ pullH }};display:flex;align-items:flex-end;justify-content:center;overflow:hidden;transition:{{ pullTrans }}">
+  <div style="width:30px;height:30px;margin-bottom:8px;border-radius:50%;background:rgba(16,24,30,.95);border:1px solid rgba(250,204,21,.3);display:flex;align-items:center;justify-content:center;opacity:{{ pullOp }}">
+    <div style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(250,204,21,.25);border-top-color:#FACC15;transform:rotate({{ pullRot }});animation:{{ pullAnim }}"></div>
+  </div>
+</div>
+
+  <!-- ── MAIN TAB ── -->
+  <sc-if value="{{ tabMain }}" hint-placeholder-val="{{ true }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 2px 14px">
+      <svg width="34" height="34" viewBox="0 0 1024 1024" style="border-radius:9px">
+        <defs>
+          <radialGradient id="wl2bg" cx=".5" cy=".42" r=".85"><stop offset="0" stop-color="#241C09"></stop><stop offset=".55" stop-color="#120E05"></stop><stop offset="1" stop-color="#070809"></stop></radialGradient>
+          <linearGradient id="wl2lt" x1="0" y1="0" x2="1" y2=".3"><stop offset="0" stop-color="#FFF085"></stop><stop offset="1" stop-color="#FACC15"></stop></linearGradient>
+          <linearGradient id="wl2dk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAB308"></stop><stop offset="1" stop-color="#B8860B"></stop></linearGradient>
+        </defs>
+        <rect width="1024" height="1024" fill="url(#wl2bg)"></rect>
+        <g fill="none" stroke="#FACC15"><circle cx="512" cy="512" r="230" stroke-opacity=".25" stroke-width="26"></circle><circle cx="512" cy="512" r="400" stroke-opacity=".12" stroke-width="24"></circle></g>
+        <g transform="translate(204,214) scale(33)"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5" fill="#0A0803" opacity=".6"></polygon></g>
+        <g transform="translate(192,192) scale(33)"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19" fill="url(#wl2lt)"></polygon><polygon points="11,1 7.4,19 16,8.5 10.9,8.5" fill="url(#wl2dk)"></polygon></g>
+      </svg>
+      <span style="font:700 17px Space Grotesk,sans-serif;flex:1">LightApp</span>
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:999px;padding:5px 11px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#34D399"></div>
+        <span style="font-size:11px;font-weight:700;color:#34D399">Node running</span>
+      </div>
+      
+    </div>
+
+    <div style="background:linear-gradient(160deg,#141B23,#10161C);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:20px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:22px;height:22px;border-radius:50%;background:#F7931A;display:flex;align-items:center;justify-content:center;font:800 12px Space Grotesk;color:#fff">₿</div>
+        <span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Bitcoin · on-chain</span>
+        <span style="flex:1"></span>
+        
+      </div>
+      <div style="margin-top:14px;font:600 32px Space Grotesk,sans-serif;letter-spacing:-.5px">{{ chainBal }}<span style="font-size:15px;color:#7E8B99;font-weight:500"> {{ unitLabel }}</span></div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <div onClick="{{ openReceive }}" style="flex:1;min-width:0;height:44px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13.5px;white-space:nowrap;cursor:pointer" style-hover="background:rgba(250,204,21,.2)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v9M3 7l4 4 4-4M2 13h10"></path></svg>Receive</div>
+        <div onClick="{{ openSend }}" style="flex:1;min-width:0;height:44px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13.5px;white-space:nowrap;cursor:pointer" style-hover="background:rgba(250,204,21,.2)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13V4M3 8l4-4 4 4M2 1h10"></path></svg>Send</div>
+        <div onClick="{{ goTx }}" style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:rgba(255,255,255,.06);color:#B7C2CC;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:rgba(255,255,255,.12)"><svg width="16" height="4" viewBox="0 0 16 4" fill="currentColor"><circle cx="2" cy="2" r="1.7"></circle><circle cx="8" cy="2" r="1.7"></circle><circle cx="14" cy="2" r="1.7"></circle></svg></div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(160deg,#26200F,#181307);border:1px solid rgba(250,204,21,.2);border-radius:20px;padding:20px;margin-top:14px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:22px;height:22px;border-radius:50%;background:rgba(250,204,21,.15);display:flex;align-items:center;justify-content:center"><svg width="11" height="11" viewBox="0 0 20 20"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5" fill="#FACC15"></polygon></svg></div>
+        <span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Lightning</span>
+        <span style="flex:1"></span>
+        <span style="font-size:12.5px;color:#7E8B99">{{ chCount }} channels</span>
+      </div>
+      <div style="margin-top:14px;font:600 32px Space Grotesk,sans-serif;letter-spacing:-.5px;color:#FACC15">{{ lnBal }}<span style="font-size:15px;color:#7E8B99;font-weight:500"> {{ unitLabel }}</span></div>
+      <div onClick="{{ copyNodeId }}" style="display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07);cursor:pointer" style-hover="opacity:.85">
+        <span style="font-size:12.5px;font-weight:700;color:#7E8B99;flex-shrink:0">Node ID</span>
+        <span style="flex:1;text-align:right;font:500 13px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nodeIdShort }}</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#FACC15" stroke-width="1.4" style="flex-shrink:0"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><path d="M8.5 3.5v-1a1.5 1.5 0 0 0-1.5-1.5H2.5A1.5 1.5 0 0 0 1 2.5V7a1.5 1.5 0 0 0 1.5 1.5h1"></path></svg>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <div onClick="{{ openNewInvoice }}" style="flex:1;min-width:0;height:44px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13.5px;white-space:nowrap;cursor:pointer" style-hover="background:#FDE047">Create invoice</div>
+        <div onClick="{{ openPay }}" style="flex:1;min-width:0;height:44px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:rgba(250,204,21,.1);border:1px solid rgba(250,204,21,.25);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:13.5px;white-space:nowrap;cursor:pointer" style-hover="background:rgba(250,204,21,.2)">Pay invoice</div>
+        <div onClick="{{ openNode }}" style="width:44px;height:44px;flex-shrink:0;border-radius:999px;background:rgba(255,255,255,.06);color:#B7C2CC;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:rgba(255,255,255,.12)"><svg width="16" height="4" viewBox="0 0 16 4" fill="currentColor"><circle cx="2" cy="2" r="1.7"></circle><circle cx="8" cy="2" r="1.7"></circle><circle cx="14" cy="2" r="1.7"></circle></svg></div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;margin:22px 2px 10px"><span style="font:700 15px Space Grotesk,sans-serif;flex:1">Recent activity</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ recent }}" as="t" hint-placeholder-count="3">
+        <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:12px 14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
+          <div style="width:34px;height:34px;border-radius:50%;background:{{ t.iconBg }};display:flex;align-items:center;justify-content:center;color:{{ t.iconC }};font-size:14px">{{ t.icon }}</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.label }}</span><span style="font-size:12.5px;color:#7E8B99">{{ t.time }}</span></div>
+          <span style="font:600 14.5px Space Grotesk,sans-serif;color:{{ t.amtC }}">{{ t.amt }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ── INVOICES TAB ── -->
+  <sc-if value="{{ tabInv }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif;padding:6px 2px 14px">Invoices</div>
+    <div style="display:flex;background:#11171E;border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:4px;gap:4px">
+      <div onClick="{{ pickCreated }}" style="flex:1;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;cursor:pointer;background:{{ segCrBg }};color:{{ segCrC }}">Created</div>
+      <div onClick="{{ pickPayments }}" style="flex:1;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:13px;cursor:pointer;background:{{ segPayBg }};color:{{ segPayC }}">Payments<sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}"><span style="min-width:16px;height:16px;border-radius:999px;background:#FB923C;color:#0A0E12;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;padding:0 4px">{{ pendingN }}</span></sc-if></div>
+    </div>
+
+    <sc-if value="{{ invCreated }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;animation:vslideR .25s cubic-bezier(.22,.9,.3,1)">
+      <sc-for list="{{ invoices }}" as="v" hint-placeholder-count="4">
+        <div onClick="{{ v.open }}" style="display:flex;align-items:center;gap:12px;background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:13px 14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
+          <div style="width:34px;height:34px;border-radius:50%;background:rgba(250,204,21,.07);display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 20 20"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5" fill="#FACC15"></polygon></svg></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <span style="font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ v.desc }}</span>
+            <span style="font-size:12.5px;color:#7E8B99">{{ v.time }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="font:600 14.5px Space Grotesk,sans-serif">{{ v.amtF }}</span>
+            <span style="font-size:11px;font-weight:800;letter-spacing:.4px;padding:2px 9px;border-radius:999px;background:{{ v.stBg }};color:{{ v.stC }}">{{ v.status }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ invPayments }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;animation:vslideL .25s cubic-bezier(.22,.9,.3,1)">
+      <sc-for list="{{ payments }}" as="p" hint-placeholder-count="3">
+        <div onClick="{{ p.open }}" style="display:flex;align-items:center;gap:12px;background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:13px 14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
+          <div style="width:34px;height:34px;border-radius:50%;background:{{ p.iconBg }};display:flex;align-items:center;justify-content:center;animation:{{ p.anim }}">{{ p.icon }}</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <span style="font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.dest }}</span>
+            <span style="font-size:12.5px;color:#7E8B99">{{ p.time }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="font:600 14.5px Space Grotesk,sans-serif">−{{ p.amtF }}</span>
+            <span style="font-size:11px;font-weight:800;letter-spacing:.4px;padding:2px 9px;border-radius:999px;background:{{ p.stBg }};color:{{ p.stC }}">{{ p.status }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+    <div onClick="{{ invCta }}" style="margin-top:16px;height:50px;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer" style-hover="background:#FDE047">{{ invCtaLabel }}</div>
+  </div>
+  </sc-if>
+
+  <!-- ── TRANSACTIONS TAB ── -->
+  <sc-if value="{{ tabTx }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif;padding:6px 2px 4px">Transactions</div>
+    <div style="font-size:12px;color:#5A6673;padding:0 2px 14px">On-chain wallet · {{ network }}</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ txs }}" as="t" hint-placeholder-count="4">
+        <div style="background:#11171E;border:1px solid {{ t.cardBd }};border-radius:14px;padding:13px 14px">
+          <div onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:12px;cursor:pointer">
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+              <span style="font:600 14.5px ui-monospace,monospace;color:#EEF3F6">{{ t.label }}</span>
+              <span style="font-size:12.5px;color:#7E8B99">{{ t.time }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+              <span style="font:600 15px Space Grotesk,sans-serif;color:#EEF3F6">{{ t.amt }}</span>
+              <span style="font-size:11.5px;font-weight:800;color:{{ t.stC }}">{{ t.status }}</span>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#5A6673" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transform:rotate({{ t.chevRot }});transition:transform .18s"><path d="M3 5l4 4 4-4"></path></svg>
+          </div>
+          <sc-if value="{{ t.expanded }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:11px;padding-top:11px;border-top:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;gap:8px;animation:vfade .2s">
+              <div onClick="{{ t.openTx }}" style="display:flex;align-items:center;gap:8px;background:#0D1319;border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.4)">
+                <span style="font-size:11.5px;font-weight:700;color:#5A6673;flex-shrink:0">TXID</span>
+                <span style="flex:1;font:500 12.5px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.txid }}</span>
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M5 2H2.5A1.5 1.5 0 0 0 1 3.5v5A1.5 1.5 0 0 0 2.5 10h5A1.5 1.5 0 0 0 9 8.5V6M7 1h4v4M11 1 5.5 6.5"></path></svg>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;background:#0D1319;border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px">
+                <span style="font-size:11.5px;font-weight:700;color:#5A6673;flex-shrink:0">Confirmations</span>
+                <span style="flex:1;text-align:right;font:500 12.5px ui-monospace,monospace;color:#B7C2CC">{{ t.confLong }}</span>
+              </div>
+              <span style="font-size:12px;color:#7E8B99;line-height:1.5;padding:0 2px">Only inputs and outputs tracked by your CLN node are shown.</span>
+              <span style="font-size:11.5px;font-weight:700;color:#5A6673;padding:2px 2px 0">Inputs</span>
+              <sc-for list="{{ t.ins }}" as="n" hint-placeholder-count="1">
+                <div onClick="{{ n.open }}" style="display:flex;align-items:center;gap:10px;background:#0D1319;border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.4)">
+                  <span style="font:600 11.5px ui-monospace,monospace;color:#5A6673;flex-shrink:0">#{{ n.vout }}</span>
+                  <span style="flex:1;font:500 12.5px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.address }}</span>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
+                    <span style="font:600 13px Space Grotesk,sans-serif;color:#EEF3F6">{{ n.amt }}</span>
+                    <span style="font-size:11px;font-weight:800;color:{{ n.stC }}">{{ n.status }}</span>
+                  </div>
+                </div>
+              </sc-for>
+              <span style="font-size:11.5px;font-weight:700;color:#5A6673;padding:2px 2px 0">Outputs</span>
+              <sc-for list="{{ t.outs }}" as="o" hint-placeholder-count="2">
+                <div onClick="{{ o.open }}" style="display:flex;align-items:center;gap:10px;background:#0D1319;border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.4)">
+                  <span style="font:600 11.5px ui-monospace,monospace;color:#5A6673;flex-shrink:0">#{{ o.vout }}</span>
+                  <span style="flex:1;font:500 12.5px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.address }}</span>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
+                    <span style="font:600 13px Space Grotesk,sans-serif;color:#EEF3F6">{{ o.amt }}</span>
+                    <span style="font-size:11px;font-weight:800;color:{{ o.stC }}">{{ o.status }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ── CHANNELS TAB ── -->
+  <sc-if value="{{ tabCh }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="display:flex;align-items:center;padding:6px 2px 14px"><span style="font:700 24px Space Grotesk,sans-serif;flex:1">Channels</span><div onClick="{{ openOpenCh }}" style="height:38px;padding:0 16px;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;gap:6px;font-weight:800;font-size:13px;cursor:pointer" style-hover="background:#FDE047">+ Open</div></div>
+    <div style="background:linear-gradient(160deg,#141B23,#10161C);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:18px">
+      <div style="display:flex;gap:14px">
+        <div style="flex:1"><div style="font-size:12.5px;color:#9FB0BC;font-weight:700">Outbound</div><div style="font:600 20px Space Grotesk,sans-serif;color:#FACC15;margin-top:3px">{{ outF }}</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.07)"></div>
+        <div style="flex:1"><div style="font-size:12.5px;color:#9FB0BC;font-weight:700">Inbound</div><div style="font:600 20px Space Grotesk,sans-serif;color:#A78BFA;margin-top:3px">{{ inF }}</div></div>
+      </div>
+      <div style="height:6px;border-radius:999px;background:rgba(167,139,250,.35);overflow:hidden;margin-top:14px"><div style="height:100%;width:{{ liqPct }};background:#FACC15;border-radius:999px"></div></div>
+      <div style="font-size:12.5px;color:#7E8B99;margin-top:8px">Total capacity {{ capF }} {{ unitLabel }} across {{ chCount }} channels</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <sc-for list="{{ channels }}" as="c" hint-placeholder-count="3">
+        <div onClick="{{ c.open }}" style="background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:50%;background:{{ c.dotBg }};display:flex;align-items:center;justify-content:center;font:700 12px Space Grotesk;color:{{ c.dotC }}">{{ c.initial }}</div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+              <span style="font-weight:700;font-size:15px">{{ c.alias }}</span>
+              <span style="font-size:12.5px;color:#7E8B99;font-family:ui-monospace,monospace">{{ c.scid }}</span>
+            </div>
+            <span style="font-size:11px;font-weight:800;letter-spacing:.4px;padding:3px 10px;border-radius:999px;background:{{ c.stBg }};color:{{ c.stC }}">{{ c.state }}</span>
+          </div>
+          <div style="height:5px;border-radius:999px;background:rgba(167,139,250,.35);overflow:hidden;margin-top:12px"><div style="height:100%;width:{{ c.pct }};background:#FACC15;border-radius:999px"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;color:#9FB0BC;margin-top:6px"><span>Ours <b style="color:#FACC15">{{ c.oursF }}</b></span><span>Theirs <b style="color:#A78BFA">{{ c.theirsF }}</b></span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+
+  <!-- ── UTXO TAB ── -->
+  <sc-if value="{{ tabUtxo }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif;padding:6px 2px 4px">UTXOs</div>
+    <div style="font-size:12px;color:#5A6673;padding:0 2px 14px">On-chain outputs</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ utxoFilters }}" as="uf" hint-placeholder-count="4">
+        <div onClick="{{ uf.pick }}" style="padding:8px 14px;border-radius:999px;font-weight:800;font-size:12px;cursor:pointer;background:{{ uf.bg }};color:{{ uf.c }};border:1px solid {{ uf.bd }}">{{ uf.label }}</div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+      <sc-for list="{{ utxos }}" as="u" hint-placeholder-count="3">
+        <div onClick="{{ u.open }}" style="background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
+          <div style="width:34px;height:34px;border-radius:50%;background:rgba(250,204,21,.07);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="2.5"></rect><circle cx="7" cy="7" r="1.6"></circle></svg></div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+            <span style="font:600 14.5px ui-monospace,monospace;color:#EEF3F6">{{ u.outpoint }}</span>
+            <span style="font:500 12.5px ui-monospace,monospace;color:#7E8B99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.address }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="font:600 15px Space Grotesk,sans-serif">{{ u.amt }}</span>
+            <span style="font-size:11.5px;font-weight:800;color:{{ u.stC }}">{{ u.status }}</span>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ utxoEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:36px 0;font-size:12.5px;color:#5A6673">No {{ utxoFilterName }} outputs</div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ── SETTINGS TAB ── -->
+  <sc-if value="{{ tabSet }}" hint-placeholder-val="{{ false }}">
+  <div style="animation:{{ tabAnim }}">
+    <div style="font:700 24px Space Grotesk,sans-serif;padding:6px 2px 14px">Settings</div>
+    <div style="font-size:12.5px;font-weight:700;color:#9FB0BC;margin:4px 2px 8px">Display unit</div>
+    <div style="display:flex;gap:8px">
+      <sc-for list="{{ unitOpts }}" as="u" hint-placeholder-count="3">
+        <div onClick="{{ u.pick }}" style="flex:1;padding:11px 0;border-radius:12px;text-align:center;font-weight:800;font-size:13px;cursor:pointer;background:{{ u.bg }};color:{{ u.c }};border:1px solid {{ u.bd }}">{{ u.label }}</div>
+      </sc-for>
+    </div>
+    <div style="font-size:12.5px;font-weight:700;color:#9FB0BC;margin:20px 2px 8px">Security</div>
+    <div style="background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:16px;overflow:hidden">
+      <div onClick="{{ openSeed }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)" style-hover="background:rgba(255,255,255,.02)">
+        <div style="width:32px;height:32px;border-radius:10px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="10" height="6.5" rx="1.5"></rect><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6"></path></svg></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:15px">Reveal recovery phrase</span><span style="font-size:12.5px;color:#7E8B99">Requires biometric unlock</span></div>
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#5A6673" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l4 4-4 4"></path></svg>
+      </div>
+      <div onClick="{{ hExportCrt }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)" style-hover="background:rgba(255,255,255,.02)">
+        <div style="width:32px;height:32px;border-radius:10px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v9M3 7l4 4 4-4M2 13h10"></path></svg></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:15px">Export client.crt</span><span style="font-size:12.5px;color:#7E8B99">Certificate material · share sheet</span></div>
+      </div>
+      <div onClick="{{ hExportKey }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)" style-hover="background:rgba(255,255,255,.02)">
+        <div style="width:32px;height:32px;border-radius:10px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v9M3 7l4 4 4-4M2 13h10"></path></svg></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:15px">Export client-key.pem</span><span style="font-size:12.5px;color:#7E8B99">Keep this file secret</span></div>
+      </div>
+      <div onClick="{{ hOpenGithub }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer" style-hover="background:rgba(255,255,255,.02)">
+        <div style="width:32px;height:32px;border-radius:10px;background:rgba(250,204,21,.08);display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H2.5A1.5 1.5 0 0 0 1 3.5v5A1.5 1.5 0 0 0 2.5 10h5A1.5 1.5 0 0 0 9 8.5V6M7 1h4v4M11 1 5.5 6.5"></path></svg></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:15px">Source code</span><span style="font-size:12.5px;color:#7E8B99;font-family:ui-monospace,monospace">github.com/olegfomenko/light-app</span></div>
+      </div>
+    </div>
+    <div style="font-size:12.5px;font-weight:700;color:#9FB0BC;margin:20px 2px 8px">Danger zone</div>
+    <div onClick="{{ openDrop }}" style="display:flex;align-items:center;gap:12px;background:rgba(248,113,111,.05);border:1px solid rgba(248,113,111,.25);border-radius:16px;padding:14px 16px;cursor:pointer" style-hover="background:rgba(248,113,111,.1)">
+      <div style="width:32px;height:32px;border-radius:10px;background:rgba(248,113,111,.1);display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#F8716F" stroke-width="1.8" stroke-linecap="round"><path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5 4 12h6l.5-8.5M5.8 6v4M8.2 6v4"></path></svg></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-weight:700;font-size:15px;color:#F8716F">Delete wallet data</span><span style="font-size:12.5px;color:#7E8B99">Wipes seed and certificates from this device</span></div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#5A6673;margin-top:24px;font-family:ui-monospace,monospace">LightApp 0.1 · Core Lightning v25.02 · Greenlight</div>
+  </div>
+  </sc-if>
+
+</div>
+
+<!-- tab bar -->
+<div style="display:flex;align-items:stretch;border-top:1px solid rgba(255,255,255,.07);background:rgba(13,18,23,.9);backdrop-filter:blur(14px);padding:8px 10px 26px">
+  <div onClick="{{ goMain }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tMainC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 11 3l8 6.5V19a1 1 0 0 1-1 1h-5v-6h-4v6H4a1 1 0 0 1-1-1Z"></path></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tMainC }}">Main</span>
+  </div>
+  <div onClick="{{ goInv }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px;position:relative">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tInvC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h12v18l-3-2-3 2-3-2-3 2Z"></path><path d="M8 7h6M8 11h6"></path></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tInvC }}">Invoices</span>
+    <sc-if value="{{ hasPending }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:4px;right:26%;width:8px;height:8px;border-radius:50%;background:#FB923C;animation:vpulse 1.2s infinite"></div></sc-if>
+  </div>
+  <div onClick="{{ goTx }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tTxC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13M14 4.5 17.5 8 14 11.5"></path><path d="M18 15H5M8 11.5 4.5 15 8 18.5"></path></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tTxC }}">Transactions</span>
+  </div>
+  <div onClick="{{ goCh }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tChC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="11" r="2.5"></circle><circle cx="17" cy="5" r="2.5"></circle><circle cx="17" cy="17" r="2.5"></circle><path d="M7.3 9.8 14.7 6M7.3 12.2l7.4 3.8"></path></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tChC }}">Channels</span>
+  </div>
+  <div onClick="{{ goUtxo }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tUtxoC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"></rect><rect x="12" y="3" width="7" height="7" rx="2"></rect><rect x="3" y="12" width="7" height="7" rx="2"></rect><circle cx="15.5" cy="15.5" r="3.5"></circle></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tUtxoC }}">UTXOs</span>
+  </div>
+  <div onClick="{{ goSet }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding-top:6px">
+    <svg width="21" height="21" viewBox="0 0 22 22" fill="none" stroke="{{ tSetC }}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="3"></circle><path d="M11 2.5v3M11 16.5v3M2.5 11h3M16.5 11h3M5 5l2.1 2.1M14.9 14.9 17 17M17 5l-2.1 2.1M7.1 14.9 5 17"></path></svg>
+    <span style="font-size:10px;font-weight:800;color:{{ tSetC }}">Settings</span>
+  </div>
+</div>
+</div>
+</sc-if>
+
+<!-- boot overlay pill -->
+<sc-if value="{{ booting }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;top:64px;left:0;right:0;display:flex;justify-content:center;z-index:40;animation:vfade .2s">
+    <div style="display:flex;align-items:center;gap:9px;background:rgba(16,24,30,.95);border:1px solid rgba(250,204,21,.3);border-radius:999px;padding:9px 16px;box-shadow:0 8px 30px rgba(0,0,0,.5)">
+      <div style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(250,204,21,.25);border-top-color:#FACC15;animation:vspin .8s linear infinite"></div>
+      <span style="font-size:12px;font-weight:700;color:#B7C2CC">{{ bootMsg }}</span>
+    </div>
+  </div>
+</sc-if>
+
+<!-- toast -->
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;bottom:110px;left:0;right:0;display:flex;justify-content:center;z-index:60;pointer-events:none;animation:vup .25s">
+    <div style="background:#EEF3F6;color:#0A0E12;border-radius:999px;padding:10px 18px;font-size:12.5px;font-weight:800;box-shadow:0 8px 30px rgba(0,0,0,.5)">{{ toast }}</div>
+  </div>
+</sc-if>
+
+<!-- ══════════ SHEETS ══════════ -->
+<sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end">
+  <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(4,7,9,.66);animation:vfade .2s"></div>
+  <div style="position:relative;max-height:86%;overflow:auto;background:#10161D;border:1px solid rgba(255,255,255,.08);border-bottom:none;border-radius:24px 24px 0 0;padding:14px 20px 40px;animation:vup .28s;box-sizing:border-box">
+    <div style="width:40px;height:4px;border-radius:999px;background:rgba(255,255,255,.15);margin:0 auto 14px"></div>
+    <div style="display:flex;align-items:center;margin-bottom:16px">
+      <div style="flex:1;display:flex;align-items:center;gap:10px"><span style="font:700 19px Space Grotesk,sans-serif">{{ sheetTitle }}</span><sc-if value="{{ shPay }}" hint-placeholder-val="{{ false }}"><span style="font:700 11.5px ui-monospace,monospace;color:#FACC15;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.25);border-radius:999px;padding:4px 11px">xpay</span></sc-if></div>
+      <div onClick="{{ closeSheet }}" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#B7C2CC;font-size:13px" style-hover="background:rgba(255,255,255,.14)"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7"></path></svg></div>
+    </div>
+
+    <!-- RECEIVE (newaddr) -->
+    <sc-if value="{{ shReceive }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div style="background:#fff;border-radius:18px;padding:12px">{{ qrAddrImg }}</div>
+        <div style="font:400 10px ui-monospace,monospace;color:#5A6673">placeholder pattern — real QR rendered at runtime</div>
+        <div onClick="{{ copyAddr }}" style="width:100%;box-sizing:border-box;background:#131A21;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:10px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.4)">
+          <span style="flex:1;font:500 12px ui-monospace,monospace;color:#B7C2CC;word-break:break-all">{{ chainAddr }}</span>
+          <svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="#FACC15" stroke-width="1.4"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><path d="M8.5 3.5v-1a1.5 1.5 0 0 0-1.5-1.5H2.5A1.5 1.5 0 0 0 1 2.5V7a1.5 1.5 0 0 0 1.5 1.5h1"></path></svg>
+        </div>
+        <div style="font-size:11.5px;color:#5A6673;text-align:center;line-height:1.6">bech32 · <span style="font-family:ui-monospace,monospace">newaddr</span> · a fresh address is generated after each use</div>
+        <div onClick="{{ hNewAddr }}" style="height:46px;padding:0 22px;border-radius:999px;border:1px solid rgba(250,204,21,.35);color:#FACC15;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13.5px;cursor:pointer" style-hover="background:rgba(250,204,21,.1)">Generate new address</div>
+      </div>
+    </sc-if>
+
+    <!-- SEND on-chain -->
+    <sc-if value="{{ shSend }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99">Destination address</div>
+        <input value="{{ fSendAddr }}" onChange="{{ hFSendAddr }}" placeholder="bc1q…" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font:500 13px ui-monospace,monospace" style-focus="border-color:#FACC15">
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99;margin-top:4px">Amount (sats)</div>
+        <input value="{{ fSendAmt }}" onChange="{{ hFSendAmt }}" placeholder="0" inputMode="numeric" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font:600 17px Space Grotesk,sans-serif" style-focus="border-color:#FACC15">
+        <div style="display:flex;justify-content:space-between;font-size:11.5px;color:#5A6673"><span>Available: {{ chainBal }} {{ unitLabel }}</span><span onClick="{{ hSendMax }}" style="color:#FACC15;font-weight:800;cursor:pointer">Send max</span></div>
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99;margin-top:4px">Feerate</div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ feerateOpts }}" as="f" hint-placeholder-count="3">
+            <div onClick="{{ f.pick }}" style="flex:1;padding:10px 0;border-radius:12px;text-align:center;cursor:pointer;background:{{ f.bg }};border:1px solid {{ f.bd }}"><div style="font-weight:800;font-size:12.5px;color:{{ f.c }}">{{ f.label }}</div><div style="font-size:10.5px;color:#5A6673;margin-top:2px">{{ f.sub }}</div></div>
+          </sc-for>
+        </div>
+        <div onClick="{{ hSendChain }}" style="margin-top:10px;height:52px;border-radius:999px;background:{{ sendBtnBg }};color:{{ sendBtnC }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer">Send on-chain</div>
+      </div>
+    </sc-if>
+
+    <!-- NEW INVOICE -->
+    <sc-if value="{{ shNewInvoice }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center"><span style="font-size:11.5px;font-weight:700;color:#7E8B99;flex:1">Amount (sats)</span><div onClick="{{ hInvAny }}" style="display:flex;align-items:center;gap:7px;cursor:pointer"><div style="width:34px;height:20px;border-radius:999px;background:{{ anyTgBg }};position:relative;transition:background .15s"><div style="position:absolute;top:2px;left:{{ anyTgX }};width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s"></div></div><span style="font-size:11.5px;font-weight:700;color:#B7C2CC">Any amount</span></div></div>
+        <sc-if value="{{ invAmtOn }}" hint-placeholder-val="{{ true }}">
+          <input value="{{ fInvAmt }}" onChange="{{ hFInvAmt }}" placeholder="25 000" inputMode="numeric" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font:600 20px Space Grotesk,sans-serif" style-focus="border-color:#FACC15">
+        </sc-if>
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99;margin-top:2px">Description</div>
+        <input value="{{ fInvDesc }}" onChange="{{ hFInvDesc }}" placeholder="What is this for?" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font-size:14px;font-family:Manrope" style-focus="border-color:#FACC15">
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99;margin-top:2px">Expiry</div>
+        <div style="display:flex;gap:8px"><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">Days</span><input value="{{ fExpD }}" onChange="{{ hFExpD }}" inputMode="numeric" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:11px 12px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif;text-align:center" style-focus="border-color:#FACC15"></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">Hours</span><input value="{{ fExpH }}" onChange="{{ hFExpH }}" inputMode="numeric" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:11px 12px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif;text-align:center" style-focus="border-color:#FACC15"></div><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">Minutes</span><input value="{{ fExpM }}" onChange="{{ hFExpM }}" inputMode="numeric" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:11px 12px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif;text-align:center" style-focus="border-color:#FACC15"></div></div>
+        <div onClick="{{ hInvAdv }}" style="display:flex;align-items:center;gap:8px;padding:6px 2px;cursor:pointer"><span style="font-size:12.5px;font-weight:800;color:#FACC15">Advanced</span><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate({{ invAdvRot }});transition:transform .15s"><path d="M3 5l4 4 4-4"></path></svg><span style="flex:1;height:1px;background:rgba(255,255,255,.06)"></span></div>
+        <sc-if value="{{ fInvAdv }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px;animation:vfade .2s">
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">Label</span><input value="{{ fInvLabel }}" onChange="{{ hFInvLabel }}" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></div>
+              <div style="width:110px;display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">CLTV</span><input value="{{ fInvCltv }}" onChange="{{ hFInvCltv }}" placeholder="18" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">Fallback address (optional)</span><input value="{{ fInvFallback }}" onChange="{{ hFInvFallback }}" placeholder="bc1q…" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center"><span style="font-size:10.5px;font-weight:700;color:#5A6673;flex:1">Preimage</span><div onClick="{{ hPreAuto }}" style="display:flex;align-items:center;gap:7px;cursor:pointer"><div style="width:34px;height:20px;border-radius:999px;background:{{ preTgBg }};position:relative;transition:background .15s"><div style="position:absolute;top:2px;left:{{ preTgX }};width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s"></div></div><span style="font-size:11px;font-weight:700;color:#B7C2CC">Auto-generate</span></div></div>
+              <sc-if value="{{ preAuto }}" hint-placeholder-val="{{ true }}"><div style="background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.1);border-radius:11px;padding:10px 12px;font:500 11px ui-monospace,monospace;color:#5A6673">Random 32-byte preimage generated by the node</div></sc-if>
+              <sc-if value="{{ preManual }}" hint-placeholder-val="{{ false }}"><input value="{{ fInvPreimage }}" onChange="{{ hFInvPreimage }}" placeholder="64 hex chars" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></sc-if>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:10.5px;font-weight:700;color:#5A6673">Expose private channels <span style="font-family:ui-monospace,monospace;color:#3E4954">exposeprivatechannels</span></span>
+              <div style="display:flex;gap:8px">
+                <sc-for list="{{ expModeOpts }}" as="x" hint-placeholder-count="4">
+                  <div onClick="{{ x.pick }}" style="flex:1;padding:9px 0;border-radius:11px;text-align:center;font-weight:800;font-size:11.5px;cursor:pointer;background:{{ x.bg }};color:{{ x.c }};border:1px solid {{ x.bd }}">{{ x.label }}</div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ expScidsOn }}" hint-placeholder-val="{{ false }}"><input value="{{ fExpScids }}" onChange="{{ hFExpScids }}" placeholder="848291x1204x1, 851002x88x0" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></sc-if>
+              <span style="font-size:10.5px;color:#5A6673">Boolean or a list of short_channel_ids — picking one form rules out the others</span>
+            </div>
+          </div>
+        </sc-if>
+        <div onClick="{{ hCreateInvoice }}" style="margin-top:8px;height:52px;border-radius:999px;background:{{ invBtnBg }};color:{{ invBtnC }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer">Create invoice</div>
+      </div>
+    </sc-if>
+
+    <!-- PAY -->
+    <sc-if value="{{ shPay }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <textarea value="{{ fPayBolt }}" onChange="{{ hFPayBolt }}" rows="3" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#B7C2CC;font:500 11.5px ui-monospace,monospace;resize:none;outline:none;line-height:1.5" style-focus="border-color:#FACC15"></textarea>
+        <sc-if value="{{ payDecoded }}" hint-placeholder-val="{{ true }}">
+          <div style="background:rgba(250,204,21,.05);border:1px solid rgba(250,204,21,.18);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#5A6673">Amount</span><span style="font:600 14px Space Grotesk;color:#EEF3F6">{{ decAmt }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#5A6673">Description</span><span style="color:#B7C2CC;font-weight:600">{{ decDesc }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#5A6673">Payee</span><span style="font-family:ui-monospace,monospace;color:#B7C2CC">{{ decPayee }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:#5A6673">Expires</span><span style="color:#FB923C;font-weight:700">{{ decExp }}</span></div>
+          </div>
+        </sc-if>
+        <div onClick="{{ hPayAdv }}" style="display:flex;align-items:center;gap:8px;padding:6px 2px;cursor:pointer"><span style="font-size:12.5px;font-weight:800;color:#FACC15">xpay options</span><svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="#FACC15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate({{ payAdvRot }});transition:transform .15s"><path d="M3 5l4 4 4-4"></path></svg><span style="flex:1;height:1px;background:rgba(255,255,255,.06)"></span></div>
+        <sc-if value="{{ fPayAdv }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;animation:vfade .2s">
+            <sc-for list="{{ payArgs }}" as="a" hint-placeholder-count="4">
+              <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:10.5px;font-weight:700;color:#5A6673">{{ a.name }}</span><input value="{{ a.val }}" onChange="{{ a.set }}" placeholder="{{ a.ph }}" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(251,146,60,.06);border:1px solid rgba(251,146,60,.2);border-radius:12px;padding:10px 14px;font-size:11.5px;color:#FDBA74;line-height:1.5"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#FDBA74" stroke-width="1.6" stroke-linecap="round" style="flex-shrink:0"><circle cx="7" cy="7" r="5.5"></circle><path d="M7 4v3l2 1.5"></path></svg>Payment runs in the background — keep using the app while it routes.</div>
+        <div onClick="{{ hPay }}" style="margin-top:4px;height:52px;border-radius:999px;background:{{ payBtnBg }};color:{{ payBtnC }};display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:15px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 20 20"><polygon points="11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5" fill="currentColor"></polygon></svg>Pay {{ decAmt }}</div>
+      </div>
+    </sc-if>
+
+    <!-- DETAIL (generic KV: invoice / payment / channel / node) -->
+    <sc-if value="{{ shDetail }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:0">
+        <sc-if value="{{ detailQr }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:16px">
+            <div style="background:#fff;border-radius:16px;padding:10px">{{ detailQrImg }}</div>
+            <div style="font:400 10px ui-monospace,monospace;color:#5A6673">placeholder pattern — real QR rendered at runtime</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ detailHero }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;margin-bottom:16px"><div style="font:600 30px Space Grotesk,sans-serif;color:{{ detailHeroC }}">{{ detailHero }}</div><div style="font-size:11.5px;color:#5A6673;margin-top:3px">{{ detailHeroSub }}</div></div>
+        </sc-if>
+        <div style="background:#0D1319;border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden">
+          <sc-for list="{{ detailRows }}" as="r" hint-placeholder-count="6">
+            <div onClick="{{ r.copy }}" style="display:flex;align-items:baseline;gap:14px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:{{ r.cursor }}" style-hover="background:rgba(255,255,255,.02)">
+              <span style="font-size:12.5px;color:#5A6673;font-weight:700;width:104px;flex-shrink:0">{{ r.k }}</span>
+              <span style="flex:1;font-size:13px;font-weight:600;color:{{ r.c }};font-family:{{ r.mono }};word-break:break-all;line-height:1.5">{{ r.v }}</span>
+              <sc-if value="{{ r.copyable }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#5A6673" stroke-width="1.4" style="flex-shrink:0;align-self:center"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><path d="M8.5 3.5v-1a1.5 1.5 0 0 0-1.5-1.5H2.5A1.5 1.5 0 0 0 1 2.5V7a1.5 1.5 0 0 0 1.5 1.5h1"></path></svg></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ detailCopy }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ hDetailCopy }}" style="margin-top:14px;height:48px;border-radius:999px;border:1px solid rgba(250,204,21,.35);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:14px;cursor:pointer" style-hover="background:rgba(250,204,21,.08)">{{ detailCopyLabel }}</div>
+        </sc-if>
+        <sc-if value="{{ detailDanger }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ hDetailDanger }}" style="margin-top:10px;height:48px;border-radius:999px;border:1px solid rgba(248,113,111,.4);color:#F8716F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;cursor:pointer" style-hover="background:rgba(248,113,111,.08)">{{ detailDanger }}</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- OPEN CHANNEL -->
+    <sc-if value="{{ shOpenCh }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99">Peer connect string</div>
+        <textarea value="{{ fChConnect }}" onChange="{{ hFChConnect }}" rows="2" placeholder="nodeid@host:port" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#B7C2CC;font:500 12px ui-monospace,monospace;resize:none;outline:none;line-height:1.5" style-focus="border-color:#FACC15"></textarea>
+        <div style="display:flex;gap:10px">
+          <div style="flex:1;display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#7E8B99">Amount (sats)</span><input value="{{ fChAmt }}" onChange="{{ hFChAmt }}" placeholder="1 000 000" inputMode="numeric" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font:600 16px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+          <div style="width:110px;display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;font-weight:700;color:#7E8B99">Min conf</span><input value="{{ fChMinconf }}" onChange="{{ hFChMinconf }}" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:13px 15px;color:#EEF3F6;font:600 16px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+        </div>
+        <div style="font-size:11.5px;font-weight:700;color:#7E8B99">Feerate</div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ chFeerateOpts }}" as="f" hint-placeholder-count="3">
+            <div onClick="{{ f.pick }}" style="flex:1;padding:10px 0;border-radius:12px;text-align:center;cursor:pointer;background:{{ f.bg }};border:1px solid {{ f.bd }}"><div style="font-weight:800;font-size:12.5px;color:{{ f.c }}">{{ f.label }}</div><div style="font-size:10.5px;color:#5A6673;margin-top:2px">{{ f.sub }}</div></div>
+          </sc-for>
+        </div>
+        <div onClick="{{ hChAnnounce }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 0"><div style="width:34px;height:20px;border-radius:999px;background:{{ annTgBg }};position:relative;transition:background .15s"><div style="position:absolute;top:2px;left:{{ annTgX }};width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s"></div></div><span style="font-size:12.5px;font-weight:700;color:#B7C2CC">Announce</span><span style="font-size:11px;color:#5A6673">public channel, visible in gossip</span></div>
+        <div onClick="{{ hOpenChannel }}" style="margin-top:8px;height:52px;border-radius:999px;background:{{ chBtnBg }};color:{{ chBtnC }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer">Connect &amp; fund channel</div>
+        <div style="font-size:11px;color:#5A6673;text-align:center;font-family:ui-monospace,monospace">connect → fundchannel</div>
+      </div>
+    </sc-if>
+
+    <!-- SEED REVEAL -->
+    <sc-if value="{{ shSeed }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:14px;color:#9FB0BC;line-height:1.6">Anyone with these 24 words can take your funds. Reveal only in private.</div>
+        <div onClick="{{ hSnReveal }}" style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;cursor:pointer">
+          <sc-for list="{{ mnWords }}" as="w" hint-placeholder-count="24">
+            <div style="display:flex;align-items:center;gap:10px;background:#131A21;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:11px 14px"><span style="font:600 11px ui-monospace,monospace;color:#5A6673;width:14px">{{ w.i }}</span><span style="font:600 14px ui-monospace,monospace;color:#EEF3F6;filter:{{ snBlur }}">{{ w.w }}</span></div>
+          </sc-for>
+          <sc-if value="{{ snHidden }}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><div style="background:rgba(10,14,18,.85);border:1px solid rgba(250,204,21,.4);border-radius:999px;padding:10px 18px;font-size:13px;font-weight:700;color:#FACC15">Tap to reveal</div></div>
+          </sc-if>
+        </div>
+        <div onClick="{{ hCopySeed }}" style="height:48px;border-radius:999px;border:1px solid rgba(250,204,21,.35);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:14px;cursor:pointer" style-hover="background:rgba(250,204,21,.08)"><svg width="13" height="13" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><path d="M8.5 3.5v-1a1.5 1.5 0 0 0-1.5-1.5H2.5A1.5 1.5 0 0 0 1 2.5V7a1.5 1.5 0 0 0 1.5 1.5h1"></path></svg>Copy seed</div>
+        <div style="font-size:12.5px;color:#7E8B99;line-height:1.6">In the production app this screen requires Face ID / fingerprint before decrypting the seed from the keystore.</div>
+      </div>
+    </sc-if>
+
+    <!-- DROP DATA -->
+    <sc-if value="{{ shDrop }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:rgba(248,113,111,.06);border:1px solid rgba(248,113,111,.25);border-radius:14px;padding:14px 16px;font-size:14px;color:#F8B4B2;line-height:1.65">This wipes the seed, Greenlight certificates and local caches from this device. Your node stays scheduled at Greenlight — recover it anytime with the 24 words.</div>
+        <div onClick="{{ hDropConfirm }}" style="height:52px;border-radius:999px;background:#F8716F;color:#2B0705;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer" style-hover="background:#FA8A88">Erase wallet data</div>
+        <div onClick="{{ closeSheet }}" style="height:48px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#B7C2CC;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer" style-hover="border-color:rgba(255,255,255,.3)">Cancel</div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;payOutcome&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;always succeed&quot;,&quot;sometimes fail&quot;,&quot;always fail&quot;],&quot;default&quot;:&quot;sometimes fail&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Simulation&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    this.nodeId = '02f8a1c3b74e0b5d9e2a640cf718d3b5a2e9c4d6f80113bb2ea94c07d15e638a41';
+    this.state = this.init();
+    this._qrCache = {};
+  }
+  init() {
+    const now = Date.now();
+    return {
+      phase: 'onboard', obStep: 0, obDir: null, obMode: 'create', rWords: Array(24).fill(''), mnRevealed: false, certCrt: false, certKey: false, regStep: -1,
+      booting: false, bootMsg: 'Contacting Greenlight scheduler…',
+      tab: 'main', tabDir: null, invTab: 'created', utxoFilter: 'confirmed', txOpen: null, pull: 0, refreshing: false, sheet: null, detail: null, toast: null,
+      addrN: 0,
+      fSendAddr: '', fSendAmt: '', fFeerate: 'Normal',
+      fInvAmt: '25000', fInvAny: false, fInvDesc: '', fExpD: '0', fExpH: '1', fExpM: '0', fInvAdv: false, unit: 'sat', snRevealed: false,
+      fInvLabel: 'inv-' + (now % 100000), fInvCltv: '', fInvFallback: '', fInvPreimage: '', fPreAuto: true, fExpMode: 'default', fExpScids: '',
+      fPayBolt: 'lnbc250u1p5vw2xkpp5qtw3m9k4e7dxu2sfzh8g6yl0c3v9n4r7jd8aeq2u6kfsxp0hg4lqdq2gdhkven9v5sxxmmfdemx76trv5sq9rzjq2vw8', fPayAdv: false,
+      pa_amount: '', pa_maxfee: '', pa_retry_for: '60', pa_partial_msat: '', pa_layers: '', pa_maxdelay: '2016', pa_payer_note: '', pa_label: '', pa_localinvreqid: '',
+      fChConnect: '', fChAmt: '', fChMinconf: '1', fChFeerate: 'Normal', fChAnnounce: true,
+      invoices: [
+        { id: 1, label: 'inv-88214', desc: 'Podcast boost', amt: 21000, status: 'paid', ts: now - 36e5 * 2, hash: '9f2c…b41a', preimage: '5d7e…90cc', expiry: '1 hour', bolt11: 'lnbc210u1p5vw2xk…', paidAt: now - 36e5 * 1.8 },
+        { id: 2, label: 'inv-88215', desc: 'Consulting — March', amt: 450000, status: 'unpaid', ts: now - 36e5 * 5, hash: '3ab1…77e0', preimage: null, expiry: '24 hours', bolt11: 'lnbc4500u1p5aa9zz…', paidAt: null },
+        { id: 3, label: 'inv-88216', desc: 'Coffee tip jar', amt: 0, status: 'unpaid', ts: now - 36e5 * 8, hash: 'c04d…1f2b', preimage: null, expiry: '7 days', bolt11: 'lnbc1p5qq0mm…', paidAt: null },
+        { id: 4, label: 'inv-88209', desc: 'VPN renewal refund', amt: 92500, status: 'expired', ts: now - 864e5 * 2, hash: '77aa…03c9', preimage: null, expiry: '1 hour', bolt11: 'lnbc925u1p5old11…', paidAt: null },
+      ],
+      payments: [
+        { id: 101, dest: 'Bitrefill', desc: 'Gift card top-up', amt: 184200, fee: 312, status: 'complete', method: 'xpay', ts: now - 36e5 * 3, hash: 'e1f0…8d2c', preimage: 'ab34…f001', parts: 2 },
+        { id: 102, dest: 'LNMarkets deposit', desc: 'LNMarkets deposit', amt: 500000, fee: 0, status: 'failed', method: 'xpay', ts: now - 36e5 * 26, hash: '0b9e…44aa', preimage: null, parts: 0, err: 'WIRE_TEMPORARY_CHANNEL_FAILURE' },
+        { id: 103, dest: 'stacker.news', desc: 'Post boost', amt: 10000, fee: 21, status: 'complete', method: 'xpay', ts: now - 864e5 * 3, hash: '6c1d…90ef', preimage: '1290…aa04', parts: 1 },
+      ],
+      channels: [
+        { id: 201, alias: 'ACINQ', peer: '03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f', scid: '848291x1204x1', state: 'NORMAL', ours: 1850000, cap: 3000000, reserve: 30000, funding: 'a3c81f42…d90b', connected: true },
+        { id: 202, alias: 'WalletOfSatoshi', peer: '035e4ff418fc8b5554c5d9eea66396c227bd429a3251c8cbc711002ba215bfc226', scid: '851002x88x0', state: 'NORMAL', ours: 420000, cap: 2000000, reserve: 20000, funding: '77b02e11…4c6a', connected: true },
+        { id: 203, alias: 'boltz.exchange', peer: '026165850492521f4ac8abd9bd8088123446d126f648ca35e60f88177dc149ceb2', scid: '852440x310x1', state: 'NORMAL', ours: 890000, cap: 1000000, reserve: 10000, funding: 'f0aa38c7…1e55', connected: false },
+      ],
+      utxos: [
+        { txid: '6a1e33bc90f4d2ae881c05b7fd0e4c992ab1e6f30d5c7a48e2b9910f5c3d77a0', vout: 0, address: 'bc1qxw4f8mz0l2t7dknh5eu93vqa2m6c04svrl89ah', amt: 1250000, status: 'confirmed', height: 904702 },
+        { txid: 'c95b20e14f78aa3d02c6e8b1f04d9a7e3352c80f16db4a29e7f0c1358d66b412', vout: 1, address: 'bc1q7ae03kx92mfu5twjc80hqv6n1zpd4ryg5l2c7s', amt: 210000, status: 'unconfirmed', height: null },
+        { txid: 'a3c81f42e07d55b9c2261f8e90aa34cd10b8e77f2d4a0c5e6b3f9d182470d90b', vout: 2, address: 'bc1qm3v82drk60p4uxfa9tje17hcw5nqys06zek43t', amt: 388200, status: 'confirmed', height: 904811 },
+        { txid: '01dd4e78af02c3b5960e1a8834f7cd25de8b7c3f5a90d14e6c2b0f78a3e5d912', vout: 0, address: 'bc1qxw4f8mz0l2t7dknh5eu93vqa2m6c04svrl89ah', amt: 250000, status: 'spent', height: 905090 },
+        { txid: 'f4b09c22d1e83a75660d2b9f01c48e73aa25d90c37eb14f8a20c6d5e9b3174c8', vout: 0, address: 'bc1q7ae03kx92mfu5twjc80hqv6n1zpd4ryg5l2c7s', amt: 3000000, status: 'immature', height: 905112 },
+      ],
+      txs: [
+        { id: 301, kind: 'in', label: 'Deposit', amt: 1500000, ts: now - 864e5 * 6, conf: 412, txid: '6a1e33bc90f4d2ae881c05b7fd0e4c992ab1e6f30d5c7a48e2b9910f5c3d77a0' },
+        { id: 302, kind: 'ch', label: 'Channel open — ACINQ', amt: -3000000, ts: now - 864e5 * 5, conf: 388, txid: 'a3c81f42e07d55b9c2261f8e90aa34cd10b8e77f2d4a0c5e6b3f9d182470d90b' },
+        { id: 303, kind: 'out', label: 'Withdrawal', amt: -250000, ts: now - 864e5 * 1, conf: 3, txid: '01dd4e78af02c3b5960e1a8834f7cd25de8b7c3f5a90d14e6c2b0f78a3e5d912' },
+        { id: 304, kind: 'in', label: 'Deposit', amt: 210000, ts: now - 36e5 * 1, conf: 0, txid: 'c95b20e14f78aa3d02c6e8b1f04d9a7e3352c80f16db4a29e7f0c1358d66b412' },
+        { id: 305, kind: 'unknown', label: 'Unknown', amt: 74300, ts: now - 864e5 * 4, conf: 290, txid: 'e88f01a6c2d94b73f05a1e8c37b6d20f94ac5e17d3b08f62a49c0e75b1d38f04' },
+      ],
+      nextId: 500,
+    };
+  }
+  componentDidMount() { if (this.state.phase === 'app') this.boot(); }
+  boot() {
+    this.setState({ booting: true, bootMsg: 'Contacting Greenlight scheduler…' });
+    setTimeout(() => this.setState({ bootMsg: 'Starting node… syncing gossip' }), 1100);
+    setTimeout(() => { this.setState({ bootMsg: 'Node running' }); setTimeout(() => this.setState({ booting: false }), 700); }, 2100);
+  }
+  goTab(t) {
+    const order = ['main', 'invoices', 'tx', 'utxo', 'channels', 'set'];
+    const dir = order.indexOf(t) > order.indexOf(this.state.tab) ? 'left' : 'right';
+    if (t !== this.state.tab) this.setState({ tab: t, tabDir: dir });
+  }
+  swipe(dx, dy) {
+    if (this._sx == null || Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || this.state.sheet) return;
+    const order = ['main', 'invoices', 'tx', 'utxo', 'channels', 'set'];
+    const i = order.indexOf(this.state.tab) + (dx < 0 ? 1 : -1);
+    if (i >= 0 && i < order.length) this.goTab(order[i]);
+    this._sx = null;
+  }
+  pullMove(y, el) {
+    if (this._sy == null || this.state.refreshing || this.state.sheet) return;
+    const dy = y - this._sy;
+    if (el.scrollTop <= 0 && dy > 0) this.setState({ pull: Math.min(dy * 0.45, 80) });
+    else if (this.state.pull) this.setState({ pull: 0 });
+  }
+  pullEnd() {
+    if (this.state.refreshing) return;
+    if (this.state.pull >= 55) {
+      this.setState({ pull: 44, refreshing: true });
+      setTimeout(() => { this.setState({ pull: 0, refreshing: false }); this.toast('Up to date'); }, 1200);
+    } else if (this.state.pull) this.setState({ pull: 0 });
+  }
+  toast(t) { this.setState({ toast: t }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: null }), 1800); }
+  fmt(n) { return Math.round(n).toLocaleString('en-US').replace(/,/g, ' '); }
+  ago(ts) { const s = (Date.now() - ts) / 1000; if (s < 90) return 'just now'; if (s < 5400) return Math.round(s / 60) + ' min ago'; if (s < 129600) return Math.round(s / 3600) + ' h ago'; return Math.round(s / 86400) + ' d ago'; }
+  qr(data, cells) {
+    if (this._qrCache[data]) return this._qrCache[data];
+    const n = cells || 29, px = 8, cv = document.createElement('canvas'); cv.width = cv.height = n * px;
+    const g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.fillStyle = '#0A0E12';
+    let h = 2166136261; for (let i = 0; i < data.length; i++) { h ^= data.charCodeAt(i); h = Math.imul(h, 16777619); }
+    const rnd = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return (h >>> 0) / 4294967296; };
+    const finder = (x, y) => { g.fillRect(x * px, y * px, 7 * px, 7 * px); g.fillStyle = '#fff'; g.fillRect((x + 1) * px, (y + 1) * px, 5 * px, 5 * px); g.fillStyle = '#0A0E12'; g.fillRect((x + 2) * px, (y + 2) * px, 3 * px, 3 * px); };
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9); if (inF) continue;
+      if (y === 6 || x === 6) { if ((x + y) % 2 === 0) g.fillRect(x * px, y * px, px, px); continue; }
+      if (rnd() < 0.44) g.fillRect(x * px, y * px, px, px);
+    }
+    finder(0, 0); finder(n - 7, 0); finder(0, n - 7);
+    const url = cv.toDataURL(); this._qrCache[data] = url; return url;
+  }
+  addrs() { return ['bc1qxw4f8mz0l2t7dknh5eu93vqa2m6c04svrl89ah', 'bc1q7ae03kx92mfu5twjc80hqv6n1zpd4ryg5l2c7s', 'bc1qm3v82drk60p4uxfa9tje17hcw5nqys06zek43t']; }
+  icon(name, color, size) {
+    size = size || 14;
+    if (name === 'bolt') return React.createElement('svg', { width: size, height: size, viewBox: '0 0 20 20' }, React.createElement('polygon', { points: '11,1 4,11.5 8.6,11.5 7.4,19 16,8.5 10.9,8.5', fill: color }));
+    const d = { down: 'M7 1v9M3 7l4 4 4-4M2 13h10', up: 'M7 13V4M3 8l4-4 4 4M2 1h10', check: 'M2.5 7.5l3 3 6-7', x: 'M3.5 3.5l7 7M10.5 3.5l-7 7', chain: 'M4 6.5 2.8 7.7a2.4 2.4 0 0 0 3.4 3.4L7.4 9.9M10 7.5l1.2-1.2a2.4 2.4 0 0 0-3.4-3.4L6.6 4.1M5.5 8.5 8.5 5.5' }[name];
+    return React.createElement('svg', { width: size, height: size, viewBox: '0 0 14 14' }, React.createElement('path', { d, fill: 'none', stroke: color, strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' }));
+  }
+  spin(color) { return React.createElement('div', { style: { width: 13, height: 13, borderRadius: '50%', border: '2px solid rgba(250,204,21,.25)', borderTopColor: color, animation: 'vspin .9s linear infinite' } }); }
+  uLabel() { const u = this.state.unit; return u === 'msat' ? 'msat' : u === 'btc' ? 'BTC' : 'sats'; }
+  val(n) { const u = this.state.unit; if (u === 'msat') return this.fmt(n * 1000); if (u === 'btc') return (n / 1e8).toFixed(8); return this.fmt(n); }
+  amt(n) { return this.val(n) + ' ' + this.uLabel(); }
+  set(f) { return (e) => this.setState({ [f]: e.target.value }); }
+  pay() {
+    const s = this.state; if (!s.fPayBolt.trim()) return;
+    const id = s.nextId; const amt = 25000; const method = 'xpay';
+    const p = { id, dest: 'lnbc250u…hg4lq', desc: 'Order #4187 — Satoshi Goods', amt, fee: null, status: 'pending', method, ts: Date.now(), hash: 'qt3w…g4lq', preimage: null, parts: 0 };
+    this.setState({ payments: [p, ...s.payments], nextId: id + 1, tab: 'invoices', invTab: 'payments', sheet: 'detail', detail: { kind: 'payment', obj: p } });
+    this.toast('Payment started — ' + method);
+    const outcome = this.props.payOutcome ?? 'sometimes fail';
+    const fail = outcome === 'always fail' || (outcome === 'sometimes fail' && this._paid ? Math.random() < 0.35 : false);
+    this._paid = true;
+    setTimeout(() => {
+      const upd = { ...p, status: fail ? 'failed' : 'complete', fee: fail ? null : 187, parts: fail ? 0 : 3, preimage: fail ? null : 'e07d…12aa', err: fail ? 'WIRE_TEMPORARY_CHANNEL_FAILURE' : undefined };
+      const d = this.state.detail;
+      this.setState({ payments: this.state.payments.map(x => x.id !== id ? x : upd), detail: (d && d.kind === 'payment' && d.obj.id === id) ? { kind: 'payment', obj: upd } : d });
+      this.toast(fail ? 'Payment failed' : 'Paid ' + this.amt(25000));
+    }, 6500 + Math.random() * 2500);
+  }
+  createInvoice() {
+    const s = this.state; if (!s.fInvAny && !String(s.fInvAmt).trim()) return;
+    const amt = s.fInvAny ? 0 : parseInt(String(s.fInvAmt).replace(/\D/g, '')) || 0;
+    const inv = { id: s.nextId, label: s.fInvLabel, desc: s.fInvDesc || 'Invoice', amt, status: 'unpaid', ts: Date.now(), hash: 'f1e2…' + (s.nextId % 97).toString(16) + 'aa', preimage: null, expiry: (((parseInt(s.fExpD) || 0) ? (parseInt(s.fExpD) || 0) + 'd ' : '') + ((parseInt(s.fExpH) || 0) ? (parseInt(s.fExpH) || 0) + 'h ' : '') + ((parseInt(s.fExpM) || 0) ? (parseInt(s.fExpM) || 0) + 'm' : '')).trim() || '1h', bolt11: 'lnbc' + (amt ? Math.round(amt / 100) + 'u' : '') + '1p5new' + s.nextId + 'zqxr…', paidAt: null };
+    this.setState({ invoices: [inv, ...s.invoices], nextId: s.nextId + 1, fInvLabel: 'inv-' + ((Date.now() + 7) % 100000) });
+    this.openDetail('invoice', inv); this.toast('Invoice created');
+  }
+  openChannel() {
+    const s = this.state; if (!s.fChConnect.trim() || !s.fChAmt.trim()) return;
+    const amt = parseInt(s.fChAmt.replace(/\D/g, '')) || 0; const id = s.nextId;
+    const alias = s.fChConnect.split('@')[0].slice(0, 8) + '…';
+    const ch = { id, alias, peer: s.fChConnect.split('@')[0], scid: 'pending', state: 'AWAITING_LOCKIN', ours: amt, cap: amt, reserve: Math.round(amt * 0.01), funding: 'b7e290aa…f2e1', connected: true };
+    this.setState({ channels: [ch, ...s.channels], nextId: id + 1, sheet: null, tab: 'channels' });
+    this.toast('connect ok · fundchannel broadcast');
+    setTimeout(() => { this.setState({ channels: this.state.channels.map(c => c.id !== id ? c : { ...c, state: 'NORMAL', scid: '854102x77x0' }) }); this.toast('Channel ' + alias + ' is live'); }, 9000);
+  }
+  closeChannel(ch) {
+    this.setState({ channels: this.state.channels.map(c => c.id !== ch.id ? c : { ...c, state: 'CLOSING' }), sheet: null });
+    this.toast('close ' + ch.alias + ' — mutual close');
+    setTimeout(() => {
+      this.setState({ channels: this.state.channels.filter(c => c.id !== ch.id), txs: [{ id: this.state.nextId, kind: 'in', label: 'Channel close — ' + ch.alias, amt: ch.ours, ts: Date.now(), conf: 0, txid: 'cl05e' + ch.id + '20e14f78aa3d02c6e8b1f04d9a7e3352c80f16db4a29e7f0c1358d66b4' }, ...this.state.txs], nextId: this.state.nextId + 1 });
+      this.toast('Channel closed — funds returning on-chain');
+    }, 7000);
+  }
+  openDetail(kind, obj) { this.setState({ sheet: 'detail', detail: { kind, obj } }); }
+  renderVals() {
+    const s = this.state, F = this.fmt.bind(this), network = 'Bitcoin';
+    const chainConf = 1250000, chainUnconf = 210000, chainBalN = chainConf + chainUnconf;
+    const outN = s.channels.filter(c => c.state !== 'CLOSING').reduce((a, c) => a + Math.max(0, c.ours - c.reserve), 0);
+    const capN = s.channels.filter(c => c.state !== 'CLOSING').reduce((a, c) => a + c.cap, 0);
+    const inN = s.channels.filter(c => c.state !== 'CLOSING').reduce((a, c) => a + Math.max(0, c.cap - c.ours - c.reserve), 0);
+    const acc = '#FACC15', accD = '#241A02', mut = 'rgba(255,255,255,.06)';
+    const chip = (on) => ({ bg: on ? 'rgba(250,204,21,.14)' : '#0D1319', bd: on ? 'rgba(250,204,21,.5)' : 'rgba(255,255,255,.08)', c: on ? acc : '#7E8B99' });
+    const stMap = { paid: ['rgba(52,211,153,.12)', '#34D399', 'PAID'], unpaid: ['rgba(251,146,60,.12)', '#FB923C', 'UNPAID'], expired: ['rgba(255,255,255,.07)', '#7E8B99', 'EXPIRED'], complete: ['rgba(52,211,153,.12)', '#34D399', 'PAID'], pending: ['rgba(251,146,60,.12)', '#FB923C', 'PAYING'], failed: ['rgba(248,113,111,.12)', '#F8716F', 'FAILED'] };
+    const mono = 'ui-monospace,monospace', sans = 'Manrope,sans-serif';
+    const regRows = [['Loading credentials', 'mTLS keypair → keystore'], [this.state.obMode === 'restore' ? 'scheduler.recover(node)' : 'scheduler.register(node)', 'gl.blckstrm.com:2111'], ['Node scheduled', 'signer ready · waiting for block tip']].map((r, i) => {
+      const done = s.regStep > i, active = s.regStep === i;
+      return { t: r[0], sub: r[1], mark: done ? this.icon('check', acc, 12) : (active ? this.spin(acc) : ''), ring: done ? acc : active ? 'rgba(250,204,21,.5)' : 'rgba(255,255,255,.12)', color: done || active ? '#EEF3F6' : '#5A6673', anim: 'none' };
+    });
+    const det = s.detail || {}; const dk = det.kind, dobj = det.obj || {};
+    let detailRows = [], detailTitle = '', detailQr = null, detailHero = null, detailHeroC = '#EEF3F6', detailHeroSub = '', detailCopy = null, detailCopyLabel = '', detailDanger = null;
+    const R = (k, v, o) => { const cp = o && o.copy; return { k, v: String(v), c: (o && o.c) || '#B7C2CC', mono: mono, copyable: !!cp, cursor: cp ? 'pointer' : 'default', copy: cp ? () => this.toast(k + ' copied') : undefined }; };
+    if (dk === 'invoice') {
+      detailTitle = 'Invoice'; detailQr = this.qr('lightning:' + dobj.bolt11 + dobj.id, 33);
+      detailHero = dobj.amt ? this.amt(dobj.amt) : 'any amount'; detailHeroSub = dobj.desc;
+      const st = stMap[dobj.status];
+      detailRows = [R('Status', st[2], { c: st[1], sans: 1 }), R('Label', dobj.label, { copy: 1 }), R('Description', dobj.desc, { sans: 1, copy: 1 }), R('Amount', dobj.amt ? this.amt(dobj.amt) : 'any', { sans: 1 }), R('Payment hash', dobj.hash, { copy: 1 }), dobj.preimage ? R('Preimage', dobj.preimage, { copy: 1 }) : R('Expiry', dobj.expiry, { sans: 1 }), R('Created', this.ago(dobj.ts), { sans: 1 }), R('bolt11', dobj.bolt11, { copy: 1 })];
+      detailCopy = 1; detailCopyLabel = 'Copy bolt11'; this._copyVal = dobj.bolt11;
+    } else if (dk === 'payment') {
+      detailTitle = 'Payment'; const st = stMap[dobj.status];
+      detailHero = '−' + this.amt(dobj.amt); detailHeroC = st[1]; detailHeroSub = 'via ' + dobj.method + (dobj.status === 'pending' ? ' — routing…' : '');
+      detailRows = [R('Status', st[2], { c: st[1], sans: 1 }), R('Description', dobj.desc || '—', { sans: 1, copy: 1 }), R('Destination', dobj.dest, { sans: 1, copy: 1 }), R('Amount', this.amt(dobj.amt), { sans: 1 }), dobj.fee != null ? R('Fee', this.amt(dobj.fee), { sans: 1 }) : R('Fee', '—', { sans: 1 }), R('Parts', dobj.parts), R('Payment hash', dobj.hash, { copy: 1 }), dobj.preimage ? R('Payment preimage', dobj.preimage, { copy: 1 }) : R('Error', dobj.err || '—', { c: dobj.err ? '#F8716F' : '#5A6673' }), R('Created', this.ago(dobj.ts), { sans: 1 })];
+    } else if (dk === 'channel') {
+      detailTitle = dobj.alias;
+      detailHero = this.amt(Math.max(0, dobj.ours - dobj.reserve)); detailHeroSub = 'spendable of ' + this.val(dobj.cap) + ' capacity';
+      detailRows = [R('State', dobj.state, { c: dobj.state === 'NORMAL' ? '#34D399' : '#FB923C', sans: 1 }), R('Peer ID', dobj.peer, { copy: 1 }), R('Short channel ID', dobj.scid, { copy: 1 }), R('Ours', this.amt(dobj.ours), { sans: 1 }), R('Theirs', this.amt(dobj.cap - dobj.ours), { sans: 1 }), R('Our reserve', this.amt(dobj.reserve), { sans: 1 }), R('Funding TXID', dobj.funding, { copy: 1 }), R('Connected', dobj.connected ? 'Yes' : 'No', { c: dobj.connected ? '#34D399' : '#F8716F', sans: 1 })];
+      detailCopy = 1; detailCopyLabel = 'Copy peer ID'; this._copyVal = dobj.peer;
+      detailDanger = dobj.state === 'NORMAL' ? 'Close channel' : null;
+    } else if (dk === 'node') {
+      detailTitle = 'Node info';
+      detailRows = [R('Node ID', this.nodeId, { copy: 1 }), R('Implementation', 'Core Lightning v25.02 (Greenlight)', { sans: 1 }), R('Network', network, { sans: 1 }), R('Block height', '905 114'), R('Scheduler', 'Connected · us-east', { c: '#34D399', sans: 1 }), R('Spendable', this.amt(outN), { c: acc, sans: 1 }), R('Receivable', this.amt(inN), { c: '#A78BFA', sans: 1 })];
+
+    }
+    const sheetTitles = { receive: 'Receive bitcoin', send: 'Send on-chain', newInvoice: 'Create invoice', pay: 'Pay invoice', openCh: 'Open channel', seed: 'Recovery phrase', drop: 'Delete wallet data', detail: detailTitle };
+    const payReady = s.fPayBolt.trim().length > 20;
+    const invReady = s.fInvAny || String(s.fInvAmt).trim();
+    const sendReady = s.fSendAddr.trim() && s.fSendAmt.trim();
+    const chReady = s.fChConnect.trim() && s.fChAmt.trim();
+    const mn = 'ripple canyon lumber viable slogan robust cattle senior fatigue matrix velvet orbit glide summit ember privacy tunnel merit spice harvest quantum drift anchor pledge'.split(' ');
+    return {
+      isOnboard: s.phase === 'onboard', isApp: s.phase === 'app',
+      ob0: s.obStep === 0, ob1: s.obStep === 1, ob2: s.obStep === 2, ob3: s.obStep === 3, ob4: s.obStep === 4,
+      obAnim: (s.obDir === 'left' ? 'vslideL' : 'vfade') + ' .3s cubic-bezier(.22,.9,.3,1)',
+      mnWords: mn.map((w, i) => ({ i: i + 1, w })), mnBlur: s.mnRevealed ? 'none' : 'blur(5px)', mnHidden: !s.mnRevealed,
+      mnBtnBg: s.mnRevealed ? acc : mut, mnBtnColor: s.mnRevealed ? accD : '#5A6673',
+      hRevealMn: () => this.setState({ mnRevealed: true }),
+      hCopySeedOb: () => this.toast(s.mnRevealed ? 'Seed copied' : 'Reveal the seed first'),
+      hGenWallet: () => this.setState({ obStep: 1, obDir: 'left', obMode: 'create' }),
+      hRestore: () => this.setState({ obStep: 4, obDir: 'left', obMode: 'restore' }),
+      hSkipDemo: () => { this.setState({ phase: 'app' }); this.boot(); },
+      hMnDone: () => { if (s.mnRevealed) this.setState({ obStep: 2, obDir: 'left' }); },
+      rWordInputs: s.rWords.map((v, ix) => ({ i: ix + 1, val: v, set: (e) => {
+        const raw = e.target.value;
+        if (raw.trim().includes(' ')) { const parts = raw.trim().split(/\s+/); const w = [...this.state.rWords]; for (let j = 0; j < parts.length && ix + j < 24; j++) w[ix + j] = parts[j].toLowerCase(); this.setState({ rWords: w }); }
+        else { const w = [...this.state.rWords]; w[ix] = raw.trim().toLowerCase(); this.setState({ rWords: w }); }
+      } })),
+      rBtnBg: s.rWords.every(w => w) ? acc : mut, rBtnC: s.rWords.every(w => w) ? accD : '#5A6673',
+      hRestoreNext: () => { if (s.rWords.every(w => w)) this.setState({ obStep: 2, obDir: 'left' }); },
+      regBtnLabel: s.obMode === 'restore' ? 'Recover node' : 'Register node',
+      regTitle: s.obMode === 'restore' ? 'Recovering your node' : 'Registering your node',
+      crtBorder: s.certCrt ? 'rgba(52,211,153,.5)' : 'rgba(255,255,255,.15)', keyBorder: s.certKey ? 'rgba(52,211,153,.5)' : 'rgba(255,255,255,.15)',
+      crtCheck: s.certCrt ? '#34D399' : 'rgba(255,255,255,.1)', keyCheck: s.certKey ? '#34D399' : 'rgba(255,255,255,.1)',
+      crtSub: s.certCrt ? 'imported · 1.2 KB · CN=gl-user' : 'Tap to import from Files', keySub: s.certKey ? 'imported · 1.7 KB · EC P-256' : 'Tap to import from Files',
+      hCertCrt: () => this.setState({ certCrt: !s.certCrt }), hCertKey: () => this.setState({ certKey: !s.certKey }),
+      regBtnBg: s.certCrt && s.certKey ? acc : mut, regBtnColor: s.certCrt && s.certKey ? accD : '#5A6673',
+      hRegister: () => {
+        if (!(s.certCrt && s.certKey)) return;
+        this.setState({ obStep: 3, regStep: 0, obDir: 'left' });
+        setTimeout(() => this.setState({ regStep: 1 }), 900);
+        setTimeout(() => this.setState({ regStep: 2 }), 2200);
+        setTimeout(() => this.setState({ regStep: 3 }), 3300);
+        setTimeout(() => { this.setState({ phase: 'app' }); this.boot(); }, 4000);
+      },
+      regRows,
+      booting: s.booting, bootMsg: s.bootMsg, toast: s.toast, network, pullH: s.pull + 'px', pullTrans: (s.pull === 0 || s.refreshing) ? 'height .25s ease' : 'none',
+      pullOp: Math.min(s.pull / 44, 1), pullRot: Math.round(s.pull * 4) + 'deg',
+      pullAnim: s.refreshing ? 'vspin .8s linear infinite' : 'none',
+      tabMain: s.tab === 'main', tabInv: s.tab === 'invoices', tabTx: s.tab === 'tx', tabCh: s.tab === 'channels', tabSet: s.tab === 'set', tabUtxo: s.tab === 'utxo',
+      tMainC: s.tab === 'main' ? acc : '#66727E', tInvC: s.tab === 'invoices' ? acc : '#66727E', tTxC: s.tab === 'tx' ? acc : '#66727E', tChC: s.tab === 'channels' ? acc : '#66727E', tSetC: s.tab === 'set' ? acc : '#66727E', tUtxoC: s.tab === 'utxo' ? acc : '#66727E',
+      goMain: () => this.goTab('main'), goInv: () => this.goTab('invoices'), goTx: () => this.goTab('tx'), goCh: () => this.goTab('channels'), goSet: () => this.goTab('set'), goUtxo: () => this.goTab('utxo'),
+      tabAnim: (s.tabDir === 'left' ? 'vslideL' : s.tabDir === 'right' ? 'vslideR' : 'vfade') + ' .28s cubic-bezier(.22,.9,.3,1)',
+      hSwipeStart: (e) => { this._sx = e.touches[0].clientX; this._sy = e.touches[0].clientY; },
+      hSwipeMove: (e) => this.pullMove(e.touches[0].clientY, e.currentTarget),
+      hSwipeEnd: (e) => { this.pullEnd(); this.swipe(e.changedTouches[0].clientX - this._sx, e.changedTouches[0].clientY - this._sy); },
+      hDragStart: (e) => { this._sx = e.clientX; this._sy = e.clientY; this._down = true; },
+      hDragMove: (e) => { if (this._down) this.pullMove(e.clientY, e.currentTarget); },
+      hDragEnd: (e) => { if (!this._down) return; this._down = false; this.pullEnd(); this.swipe(e.clientX - this._sx, e.clientY - this._sy); },
+      unitOpts: [['sat', 'sat'], ['msat', 'msat'], ['btc', 'BTC']].map(o => ({ label: o[1], ...chip(s.unit === o[0]), pick: () => this.setState({ unit: o[0] }) })),
+      unitLabel: this.uLabel(),
+      openSeed: () => this.setState({ sheet: 'seed', snRevealed: false }),
+      snBlur: s.snRevealed ? 'none' : 'blur(5px)', snHidden: !s.snRevealed, hSnReveal: () => this.setState({ snRevealed: true }),
+      hCopySeed: () => this.toast(s.snRevealed ? 'Seed copied' : 'Reveal the seed first'),
+      hOpenGithub: () => window.open('https://github.com/olegfomenko/light-app', '_blank'),
+      hOpenGlConsole: () => window.open('https://greenlight.blockstream.com/', '_blank'),
+      hExportCrt: () => this.toast('client.crt exported via share sheet'),
+      hExportKey: () => this.toast('client-key.pem exported via share sheet'),
+      openDrop: () => this.setState({ sheet: 'drop' }),
+      hDropConfirm: () => { this.setState(this.init()); this.toast('Wallet data erased'); },
+      chainBal: this.val(chainBalN),
+      lnBal: this.val(outN), outF: this.val(outN), inF: this.val(inN), capF: this.val(capN), liqPct: Math.round(outN / (outN + inN) * 100) + '%',
+      chCount: s.channels.length, nodeIdShort: this.nodeId.slice(0, 10) + '…' + this.nodeId.slice(-6),
+      copyNodeId: () => this.toast('Node ID copied'),
+      recent: [
+        ...s.payments.slice(0, 2).map(p => ({ icon: this.icon('bolt', acc), iconBg: 'rgba(250,204,21,.08)', iconC: acc, label: p.desc || p.dest, time: this.ago(p.ts), amt: '−' + this.val(p.amt), amtC: p.status === 'failed' ? '#5A6673' : '#EEF3F6', open: () => this.setState({ tab: 'invoices', invTab: 'payments', sheet: 'detail', detail: { kind: 'payment', obj: p } }) })),
+        { icon: this.icon('down', '#34D399'), iconBg: 'rgba(52,211,153,.1)', iconC: '#34D399', label: 'Deposit confirmed', time: this.ago(s.txs[0].ts), amt: '+' + this.val(s.txs[0].amt), amtC: '#34D399', open: () => this.setState({ tab: 'tx', txOpen: s.txs[0].id }) },
+      ],
+      invCreated: s.invTab === 'created', invPayments: s.invTab === 'payments',
+      segCrBg: s.invTab === 'created' ? acc : 'transparent', segCrC: s.invTab === 'created' ? accD : '#7E8B99',
+      segPayBg: s.invTab === 'payments' ? acc : 'transparent', segPayC: s.invTab === 'payments' ? accD : '#7E8B99',
+      pickCreated: () => this.setState({ invTab: 'created' }), pickPayments: () => this.setState({ invTab: 'payments' }),
+      hasPending: s.payments.some(p => p.status === 'pending'), pendingN: s.payments.filter(p => p.status === 'pending').length,
+      invoices: s.invoices.map(v => { const st = stMap[v.status]; return { desc: v.desc, label: v.label, time: this.ago(v.ts), amtF: v.amt ? this.val(v.amt) : 'any', stBg: st[0], stC: st[1], status: st[2], open: () => this.openDetail('invoice', v) }; }),
+      payments: s.payments.map(p => { const st = stMap[p.status]; const pend = p.status === 'pending'; return { dest: p.desc || p.dest, method: p.method, time: this.ago(p.ts), amtF: this.val(p.amt), stBg: st[0], stC: st[1], status: st[2], anim: 'none', iconBg: st[0], icon: pend ? this.spin(st[1]) : this.icon(p.status === 'failed' ? 'x' : 'bolt', st[1], 14), open: () => this.openDetail('payment', p) }; }),
+      invCta: () => this.setState({ sheet: s.invTab === 'created' ? 'newInvoice' : 'pay' }),
+      invCtaLabel: s.invTab === 'created' ? 'Create invoice' : 'Pay invoice',
+      utxoFilters: ['unconfirmed', 'confirmed', 'spent', 'immature'].map(o => ({ label: o[0].toUpperCase() + o.slice(1), ...chip(s.utxoFilter === o), pick: () => this.setState({ utxoFilter: o }) })),
+      utxoFilterName: s.utxoFilter,
+      utxos: s.utxos.filter(u => u.status === s.utxoFilter).map(u => ({
+        outpoint: u.txid.slice(0, 6) + '…' + u.txid.slice(-5) + ':' + u.vout,
+        address: u.address, amt: this.val(u.amt),
+        status: u.status[0].toUpperCase() + u.status.slice(1),
+        stC: u.status === 'confirmed' ? '#34D399' : u.status === 'unconfirmed' ? '#FB923C' : u.status === 'immature' ? '#A78BFA' : '#5A6673',
+        open: () => window.open('https://mempool.space/address/' + u.address, '_blank'),
+      })),
+      utxoEmpty: s.utxos.every(u => u.status !== s.utxoFilter),
+      txs: (s.txs.some(t => t.kind === 'unknown') ? s.txs : [...s.txs, { id: 305, kind: 'unknown', amt: 74300, ts: Date.now() - 864e5 * 4, conf: 290, txid: 'e88f01a6c2d94b73f05a1e8c37b6d20f94ac5e17d3b08f62a49c0e75b1d38f04' }]).map(t => {
+        const stMeta = (st) => ({ status: st[0].toUpperCase() + st.slice(1), stC: st === 'confirmed' ? '#34D399' : st === 'unconfirmed' ? '#FB923C' : st === 'immature' ? '#A78BFA' : '#5A6673' });
+        let raw = s.utxos.filter(u => u.txid === t.txid).map(u => ({ vout: u.vout, address: u.address, amtN: u.amt, st: u.status }));
+        if (!raw.length) raw = [{ vout: 0, address: this.addrs()[t.id % 3], amtN: Math.round(Math.abs(t.amt) * 0.62), st: t.conf === 0 ? 'unconfirmed' : 'confirmed' }];
+        if (raw.length < 2) { const used = raw.map(o => o.vout); const nv = used.includes(0) ? (used.includes(1) ? 2 : 1) : 0; raw = [...raw, { vout: nv, address: this.addrs()[(t.id + 1) % 3], amtN: Math.max(1000, Math.abs(t.amt) - raw[0].amtN - 210), st: t.id % 2 ? 'spent' : (t.conf === 0 ? 'unconfirmed' : 'confirmed') }]; }
+        const outs = raw.sort((a, b) => a.vout - b.vout).map(o => ({ vout: o.vout, address: o.address, amt: this.val(o.amtN), ...stMeta(o.st), open: () => window.open('https://mempool.space/address/' + o.address, '_blank') }));
+        const totalOut = raw.reduce((a, o) => a + o.amtN, 0);
+        const ins = (t.id % 3 === 0 ? [{ vout: 1, share: 1 }] : [{ vout: 0, share: 0.7 }, { vout: 1, share: 0.3 }]).map((i, ix) => ({ vout: i.vout, address: this.addrs()[(t.id + ix + 2) % 3], amt: this.val(Math.round((totalOut + 210) * i.share)), ...stMeta('spent'), open: () => window.open('https://mempool.space/address/' + this.addrs()[(t.id + ix + 2) % 3], '_blank') }));
+        const expanded = s.txOpen === t.id;
+        return { toggle: () => this.setState({ txOpen: expanded ? null : t.id }), expanded, chevRot: expanded ? '180deg' : '0deg', cardBd: expanded ? 'rgba(250,204,21,.3)' : 'rgba(255,255,255,.05)', openTx: () => window.open('https://mempool.space/tx/' + t.txid, '_blank'), txid: t.txid, outs, ins, label: t.txid.slice(0, 6) + '…' + t.txid.slice(-5), time: this.ago(t.ts), confLong: t.conf === 0 ? 'Unconfirmed' : String(t.conf), status: t.conf === 0 ? 'Unconfirmed' : 'Confirmed', stC: t.conf === 0 ? '#FB923C' : '#34D399', amt: this.val(Math.abs(t.amt)) };
+      }),
+      channels: s.channels.map(c => { const pct = Math.round(c.ours / c.cap * 100); const stC = c.state === 'NORMAL' ? '#34D399' : c.state === 'CLOSING' ? '#F8716F' : '#FB923C'; return { alias: c.alias, scid: c.scid, initial: c.alias[0].toUpperCase(), dotBg: 'rgba(250,204,21,.1)', dotC: acc, state: c.state, stC, stBg: c.state === 'NORMAL' ? 'rgba(52,211,153,.1)' : c.state === 'CLOSING' ? 'rgba(248,113,111,.1)' : 'rgba(251,146,60,.1)', pct: pct + '%', oursF: this.val(c.ours), theirsF: this.val(c.cap - c.ours), open: () => this.openDetail('channel', c) }; }),
+      sheetOpen: !!s.sheet, sheetTitle: sheetTitles[s.sheet] || '',
+      closeSheet: () => this.setState({ sheet: null }),
+      shReceive: s.sheet === 'receive', shSend: s.sheet === 'send', shNewInvoice: s.sheet === 'newInvoice', shPay: s.sheet === 'pay', shOpenCh: s.sheet === 'openCh', shDetail: s.sheet === 'detail', shSeed: s.sheet === 'seed', shDrop: s.sheet === 'drop',
+      openReceive: () => this.setState({ sheet: 'receive' }), openSend: () => this.setState({ sheet: 'send' }),
+      openNewInvoice: () => this.setState({ sheet: 'newInvoice' }), openPay: () => this.setState({ sheet: 'pay' }),
+      openNode: () => this.openDetail('node', {}), openOpenCh: () => this.setState({ sheet: 'openCh' }),
+      chainAddr: this.addrs()[s.addrN % 3], qrAddrImg: React.createElement('img', { src: this.qr('bitcoin:' + this.addrs()[s.addrN % 3]), width: 188, height: 188, style: { display: 'block', imageRendering: 'pixelated' }, alt: 'address QR' }),
+      copyAddr: () => this.toast('Address copied'), hNewAddr: () => { this.setState({ addrN: s.addrN + 1 }); this.toast('newaddr → fresh address'); },
+      fSendAddr: s.fSendAddr, hFSendAddr: this.set('fSendAddr'), fSendAmt: s.fSendAmt, hFSendAmt: this.set('fSendAmt'),
+      hSendMax: () => this.setState({ fSendAmt: String(chainConf) }),
+      feerateOpts: [['Slow', '~1 h'], ['Normal', '~30 min'], ['Urgent', 'Next block']].map(o => ({ label: o[0], sub: o[1], ...chip(s.fFeerate === o[0]), pick: () => this.setState({ fFeerate: o[0] }) })),
+      sendBtnBg: sendReady ? acc : mut, sendBtnC: sendReady ? accD : '#5A6673',
+      hSendChain: () => { if (!sendReady) return; const amt = parseInt(s.fSendAmt.replace(/\D/g, '')) || 0; this.setState({ txs: [{ id: s.nextId, kind: 'out', label: 'Withdrawal', amt: -amt, ts: Date.now(), conf: 0, txid: 'send' + s.nextId + 'e14f78aa3d02c6e8b1f04d9a7e3352c80f16db4a29e7f0c1358d66b4' }, ...s.txs], nextId: s.nextId + 1, sheet: null, fSendAddr: '', fSendAmt: '' }); this.toast('Broadcast — ' + this.amt(amt)); },
+      fInvAmt: s.fInvAmt, hFInvAmt: this.set('fInvAmt'), fInvDesc: s.fInvDesc, hFInvDesc: this.set('fInvDesc'),
+      invAmtOn: !s.fInvAny, hInvAny: () => this.setState({ fInvAny: !s.fInvAny }),
+      anyTgBg: s.fInvAny ? acc : 'rgba(255,255,255,.14)', anyTgX: s.fInvAny ? '16px' : '2px',
+      fExpD: s.fExpD, hFExpD: this.set('fExpD'), fExpH: s.fExpH, hFExpH: this.set('fExpH'), fExpM: s.fExpM, hFExpM: this.set('fExpM'),
+      fInvAdv: s.fInvAdv, hInvAdv: () => this.setState({ fInvAdv: !s.fInvAdv }), invAdvRot: s.fInvAdv ? '180deg' : '0deg',
+      fInvLabel: s.fInvLabel, hFInvLabel: this.set('fInvLabel'), fInvCltv: s.fInvCltv, hFInvCltv: this.set('fInvCltv'),
+      fInvFallback: s.fInvFallback, hFInvFallback: this.set('fInvFallback'), fInvPreimage: s.fInvPreimage, hFInvPreimage: this.set('fInvPreimage'),
+      preAuto: s.fPreAuto, preManual: !s.fPreAuto, hPreAuto: () => this.setState({ fPreAuto: !s.fPreAuto }),
+      preTgBg: s.fPreAuto ? acc : 'rgba(255,255,255,.14)', preTgX: s.fPreAuto ? '16px' : '2px',
+      expModeOpts: [['default', 'Default'], ['true', 'True'], ['false', 'False'], ['scids', 'SCIDs']].map(o => ({ label: o[1], ...chip(s.fExpMode === o[0]), pick: () => this.setState({ fExpMode: o[0] }) })),
+      expScidsOn: s.fExpMode === 'scids', fExpScids: s.fExpScids, hFExpScids: this.set('fExpScids'),
+      invBtnBg: invReady ? acc : mut, invBtnC: invReady ? accD : '#5A6673',
+      hCreateInvoice: () => this.createInvoice(),
+      fPayBolt: s.fPayBolt, hFPayBolt: this.set('fPayBolt'),
+      payDecoded: payReady, decAmt: this.amt(25000), decDesc: 'Order #4187 — Satoshi Goods', decPayee: '03ab…c2f9 (river.com)', decExp: 'in 58 min',
+      fPayAdv: s.fPayAdv, hPayAdv: () => this.setState({ fPayAdv: !s.fPayAdv }), payAdvRot: s.fPayAdv ? '180deg' : '0deg',
+      payArgs: [['Amount (msat)', 'pa_amount', 'if invoice has none'], ['Max fee', 'pa_maxfee', '5000msat or 1%'], ['Retry for (s)', 'pa_retry_for', '60'], ['Max delay (blocks)', 'pa_maxdelay', '2016'], ['Partial (msat)', 'pa_partial_msat', 'pay a part only'], ['Layers', 'pa_layers', 'askrene layers'], ['Payer note', 'pa_payer_note', 'bolt12 only'], ['Label', 'pa_label', 'for listpays'], ['Local invreq ID', 'pa_localinvreqid', 'hex']].map(a => ({ name: a[0], val: s[a[1]], ph: a[2], set: this.set(a[1]) })),
+      payBtnBg: payReady ? acc : mut, payBtnC: payReady ? accD : '#5A6673',
+      hPay: () => { if (payReady) this.pay(); },
+      detailRows, detailQr, detailQrImg: detailQr ? React.createElement('img', { src: detailQr, width: 164, height: 164, style: { display: 'block', imageRendering: 'pixelated' }, alt: 'QR' }) : null, detailHero, detailHeroC, detailHeroSub,
+      detailCopy, detailCopyLabel, hDetailCopy: () => this.toast('Copied'),
+      detailDanger, hDetailDanger: () => this.closeChannel(dobj),
+      fChConnect: s.fChConnect, hFChConnect: this.set('fChConnect'), fChAmt: s.fChAmt, hFChAmt: this.set('fChAmt'), fChMinconf: s.fChMinconf, hFChMinconf: this.set('fChMinconf'),
+      chFeerateOpts: [['Slow', 'Economical'], ['Normal', '~30 min'], ['Urgent', 'Next block']].map(o => ({ label: o[0], sub: o[1], ...chip(s.fChFeerate === o[0]), pick: () => this.setState({ fChFeerate: o[0] }) })),
+      hChAnnounce: () => this.setState({ fChAnnounce: !s.fChAnnounce }),
+      annTgBg: s.fChAnnounce ? acc : 'rgba(255,255,255,.14)', annTgX: s.fChAnnounce ? '16px' : '2px',
+      chBtnBg: chReady ? acc : mut, chBtnC: chReady ? accD : '#5A6673',
+      hOpenChannel: () => this.openChannel(),
+    };
+  }
+}
+</script>
+</body>
+</html>
