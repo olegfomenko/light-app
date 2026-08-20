@@ -5,14 +5,8 @@ An Android wallet (Kotlin + Jetpack Compose) built on Blockstream
 LSP-abstracted wallets, LightApp gives you a **full Core Lightning node** whose
 keys live only on your phone: Greenlight runs the node in the cloud, but every
 signature is produced on-device by an in-app signer. You get the whole RPC
-surface — channels, liquidity, invoices, `xpay`/`pay`/`renepay`, on-chain — in
+surface — channels, liquidity, invoices, xpay, on-chain — in
 a clean UI, instead of a locked-down "balance and a send button".
-
-> ⚠️ **Alpha software, real money.** This wallet targets **mainnet** and has
-> **not** been through a third-party security audit. It has had an internal
-> review (see [Security](#security)), but you use it at your own risk. Start
-> with small amounts. Back up your recovery phrase. Do not put in more than you
-> are willing to lose.
 
 ## Features
 
@@ -166,21 +160,6 @@ You will also need Greenlight developer credentials (a certificate + key) from
 the [Greenlight console](https://blockstream.github.io/greenlight/) to register
 or recover a node.
 
-### Release signing
-
-Release builds are **not** signed with the public Android debug key. To produce
-a signed release, create `app/keystore.properties` (git-ignored):
-
-```properties
-storeFile=/absolute/path/to/your-release.jks
-storePassword=…
-keyAlias=…
-keyPassword=…
-```
-
-Without it, `assembleRelease` produces an **unsigned** APK (sign it yourself
-before installing). Debug builds are unaffected.
-
 ## Security
 
 The wallet's job is to keep your seed on your device and your funds yours.
@@ -199,15 +178,6 @@ The wallet's job is to keep your seed on your device and your funds yours.
 - **In memory:** the seed is zeroized in the Rust core after use.
 - **Logging:** the Rust/gl-client logs (which contain node/payment metadata) are
   emitted **only on debug builds**.
-
-Known limitations / not yet done: no biometric prompt gating reveal & send (the
-key is device-lock gated instead); if the signer dies mid-session the UI can
-still look connected and a subsequent payment may hang (no double-spend — it
-just won't complete until you reconnect); balances can read low transiently
-while a channel is opening/closing. This code has **not** had an external audit.
-
-**Responsible disclosure:** please report security issues privately to the
-maintainer rather than opening a public issue.
 
 ## Design credit
 
