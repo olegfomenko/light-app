@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — LightApp</title>
+<meta name="description" content="LightApp collects no personal data. What the app stores on your device, what Blockstream Greenlight can see, and what leaves your phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+  :root {
+    --bg:      #FAFAF8;
+    --surface: #FFFFFF;
+    --ink:     #14181C;
+    --slate:   #5A6673;
+    --faint:   #8A94A0;
+    --rule:    #E4E4DE;
+    --gold:    #FACC15;
+    --accent:  #7A5D00;
+    --wash:    #FDF7DE;
+    --green:   #0F7A5A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:      #0A0E12;
+      --surface: #12171C;
+      --ink:     #EEF3F6;
+      --slate:   #9FB0BC;
+      --faint:   #7E8B99;
+      --rule:    #1F272E;
+      --gold:    #FACC15;
+      --accent:  #FACC15;
+      --wash:    #1B1808;
+      --green:   #34D399;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; padding: 0 24px 88px;
+    background: var(--bg); color: var(--ink);
+    font-family: Manrope, system-ui, -apple-system, sans-serif;
+    font-size: 16.5px; line-height: 1.65;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header { padding: 56px 0 26px; border-bottom: 1px solid var(--rule); }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+  .brand svg { display: block; }
+  .brand span {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-weight: 700; font-size: 19px; letter-spacing: -.01em;
+  }
+  h1 {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-weight: 700; font-size: clamp(30px, 5.5vw, 42px); line-height: 1.1;
+    letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance;
+  }
+  .dateline { margin: 0; color: var(--faint); font-size: 14px; }
+
+  .tldr {
+    background: var(--wash); border: 1px solid var(--gold);
+    border-radius: 10px; padding: 20px 22px; margin: 30px 0 0;
+  }
+  .tldr h2 {
+    font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 10px; font-family: Manrope, sans-serif;
+  }
+  .tldr p { margin: 0 0 10px; }
+  .tldr p:last-child { margin: 0; }
+
+  h2.sec {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    font-size: 21px; font-weight: 700; letter-spacing: -.01em;
+    margin: 44px 0 12px; padding-top: 22px; border-top: 1px solid var(--rule);
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: 15.5px; font-weight: 800; margin: 22px 0 8px;
+    letter-spacing: -.005em;
+  }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin: 0 0 8px; }
+  strong { font-weight: 800; }
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
+  code {
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .85em;
+    background: var(--wash); color: var(--ink); padding: 1px 5px; border-radius: 3px;
+  }
+  .none {
+    color: var(--green); font-weight: 800;
+  }
+
+  .tablewrap { overflow-x: auto; margin: 0 0 16px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-size: 11.5px; font-weight: 800; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--slate);
+  }
+  td:first-child { font-weight: 700; white-space: nowrap; }
+
+  footer {
+    margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--rule);
+    color: var(--faint); font-size: 14px;
+  }
+  footer a { color: var(--slate); }
+  @media (max-width: 560px) { body { font-size: 16px; padding: 0 18px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 1024 1024" aria-hidden="true">
+        <rect width="1024" height="1024" rx="230" fill="#120E05"/>
+        <path d="M555,225L324,571.5L475.8,571.5L436.2,819Z" fill="#FFE45E"/>
+        <path d="M555,225L436.2,819L720,472.5L551.7,472.5Z" fill="#EAB308"/>
+      </svg>
+      <span>LightApp</span>
+    </div>
+    <h1>Privacy Policy</h1>
+    <p class="dateline">Effective 21 August 2026 &middot; applies to the Android app <code>app.light.wallet</code></p>
+  </header>
+
+  <div class="tldr">
+    <h2>The short version</h2>
+    <p>LightApp collects <strong>nothing</strong>. There are no accounts, no analytics, no crash reporting, no advertising and no servers operated by us. Nobody is watching what you do in the app.</p>
+    <p>Your recovery phrase and credentials are encrypted and stay on your phone. The one party that sees anything is <strong>Blockstream Greenlight</strong>, which runs your Lightning node — and it can never move your funds, because signing happens on your device.</p>
+  </div>
+
+  <h2 class="sec">1. Who is responsible</h2>
+  <p>LightApp is a free, open-source project maintained by an individual developer. There is no company behind it, no backend of ours, and no database anywhere holding information about you.</p>
+  <p>Because the app collects no personal data, there is no data controller in the usual sense. Where this policy describes information leaving your device, it is going to a third party you are choosing to use — never to us.</p>
+
+  <h2 class="sec">2. Data we collect</h2>
+  <p><span class="none">None.</span> To be specific, LightApp does not collect, transmit or store:</p>
+  <ul>
+    <li>Names, email addresses, phone numbers or any account identifiers — the app has no sign-up</li>
+    <li>Analytics, usage statistics, event tracking or performance telemetry</li>
+    <li>Crash reports or diagnostic logs</li>
+    <li>Advertising identifiers; the app contains no ads and no advertising SDKs</li>
+    <li>Contacts, photos, files, camera, microphone or location data — none of these permissions are requested</li>
+  </ul>
+  <p>The app declares exactly one Android permission: <code>INTERNET</code>, needed to reach your Lightning node.</p>
+
+  <h2 class="sec">3. What is stored on your device</h2>
+  <p>Everything sensitive stays local. The following never leaves your phone unless you deliberately export it:</p>
+  <ul>
+    <li><strong>Your recovery phrase</strong> — the 24-word BIP39 seed that controls your funds</li>
+    <li><strong>Greenlight credentials</strong> — the developer certificate and key you upload, and the device credentials issued when your node is registered</li>
+    <li><strong>Preferences</strong> — your display unit choice, which is not sensitive and is stored in plain app storage</li>
+  </ul>
+
+  <h3>How it is protected</h3>
+  <ul>
+    <li>Encrypted with AES-GCM using a key generated inside the <strong>Android Keystore</strong>, hardware-backed by StrongBox where your device provides a secure element</li>
+    <li>The key <strong>cannot be used while your device is locked</strong>, and its material never leaves secure hardware</li>
+    <li>The app is excluded from Android cloud and device backups (<code>allowBackup=false</code>), so your seed is never copied off the phone by the system</li>
+    <li>Screens that display your recovery phrase block screenshots and screen recording</li>
+    <li>Copying your seed or private key marks the clipboard entry sensitive and clears it automatically after 60 seconds</li>
+    <li>Release builds emit no logs</li>
+  </ul>
+  <p>Uninstalling LightApp, or using <strong>Delete wallet data</strong> in Settings, erases all of this from the device. Neither action affects your node, and neither is recoverable without your recovery phrase — keep it written down offline.</p>
+
+  <h2 class="sec">4. Third parties your phone connects to</h2>
+  <p>LightApp talks to services you choose to use. We receive nothing from any of them.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Service</th><th>When</th><th>What it can see</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Blockstream Greenlight</td>
+          <td>Whenever the app is open and your node is running</td>
+          <td>Your node's activity and your IP address — see section 5</td>
+        </tr>
+        <tr>
+          <td>mempool.space</td>
+          <td>Only if you tap a transaction or output to view it</td>
+          <td>The transaction ID you opened and your IP address</td>
+        </tr>
+        <tr>
+          <td>GitHub</td>
+          <td>Only if you tap a source-code link</td>
+          <td>That you opened the repository, and your IP address</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The last two open in your browser and are governed by those services' own privacy policies.</p>
+
+  <h2 class="sec">5. What Greenlight can see</h2>
+  <p>This is the most important thing to understand about using LightApp, so it is stated plainly.</p>
+  <p>Your Lightning node runs on <a href="https://blockstream.com/lightning/greenlight/">Blockstream Greenlight</a>'s infrastructure. The app connects to it over an authenticated, encrypted connection using the credentials you supply. In the course of running your node, Greenlight can observe:</p>
+  <ul>
+    <li>Your node's identity and the fact that it is online</li>
+    <li>Your channels, balances and the payments your node sends, receives and forwards</li>
+    <li>The IP address your phone connects from</li>
+  </ul>
+  <p><strong>What Greenlight cannot do is spend your money.</strong> Your keys are never uploaded. Every operation requiring a signature is sent to the signer running inside the app on your phone, which approves it locally. This is the core design of Greenlight and the reason LightApp is non-custodial.</p>
+  <p>Greenlight's handling of this information is covered by <a href="https://blockstream.com/privacy-policy/">Blockstream's privacy policy</a>. If you are not comfortable with a third party observing your node's activity, this app is not the right tool for you.</p>
+
+  <h2 class="sec">6. Bitcoin and Lightning are public networks</h2>
+  <p>Independently of this app: on-chain Bitcoin transactions are recorded permanently on a public blockchain and can be examined by anyone. Lightning payments are more private, but routing nodes necessarily learn about the payments they forward. LightApp cannot change either of these properties, and no privacy policy can.</p>
+
+  <h2 class="sec">7. Children</h2>
+  <p>LightApp is not directed at children and is not intended for anyone under 18. We knowingly collect no data from anyone, children included.</p>
+
+  <h2 class="sec">8. Your rights</h2>
+  <p>Privacy regulations such as the GDPR and CCPA give you rights to access, correct, export and delete personal data held about you, and to object to its processing.</p>
+  <p>We hold no personal data about you, so there is nothing to disclose, correct, export or erase, and no sale or sharing of personal information takes place — LightApp has never sold or shared any, because it has none. Data on your own device is under your sole control and can be erased at any time from Settings or by uninstalling the app.</p>
+
+  <h2 class="sec">9. Security disclosure</h2>
+  <p>LightApp handles real funds and has not undergone a third-party security audit. If you find a vulnerability, please report it privately through the repository rather than opening a public issue, so it can be fixed before it is disclosed.</p>
+
+  <h2 class="sec">10. Changes to this policy</h2>
+  <p>If this policy changes, the revised version will be published at this address with a new effective date. Because the app's source is public, changes to what it actually does are visible in the commit history as well.</p>
+
+  <h2 class="sec">11. Contact</h2>
+  <p>Questions about this policy or the app can be raised at <a href="https://github.com/olegfomenko/light-app/issues">github.com/olegfomenko/light-app/issues</a>.</p>
+
+  <footer>
+    <p>LightApp is free software released under the MIT licence. Source: <a href="https://github.com/olegfomenko/light-app">github.com/olegfomenko/light-app</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
