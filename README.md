@@ -135,30 +135,89 @@ backgrounded (unless a payment is dispatching) and re-scheduled on foreground.
 
 ## Building
 
-Prerequisites: **Android Studio** (any recent version — it bundles a JDK) and
-**Rust** via [rustup](https://rustup.rs). Everything else installs itself.
+### Requirements
+
+- Android 9 phone or newer with a 64-bit ARM CPU. Only `arm64-v8a` is built.
+- MacOS or Linux. Windows works through WSL2, but the setup script is written for macOS.
+- Greenlight developer credentials – a certificate and key from Blockstream.
+  You do not need them to *build* the app, but you do need them to register a
+  node and actually use it. Request them at
+  [greenlight.blockstream.com](https://greenlight.blockstream.com/).
+
+### 1. Install Android Studio
+
+Download and install it from
+[developer.android.com/studio](https://developer.android.com/studio). It bundles
+a JDK and the Android SDK, so you do not need to install Java separately.
+
+### 2. Install Rust
+
+The wallet's core is a Rust library. Install the toolchain from
+[rustup.rs](https://rustup.rs):
 
 ```bash
-./scripts/bootstrap.sh          # install NDK/cargo-ndk/protoc if missing,
-                                # build everything, launch an emulator
-./scripts/bootstrap.sh --build  # same, but stop after building the APK
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-After the first run (or if you already have the NDK + cargo-ndk + protoc), just
-**open the folder in Android Studio and press Run** — the Gradle build has a
-`:app:buildRustCore` task that compiles
-`app/src/main/jniLibs/arm64-v8a/liblightcore.so` and regenerates the UniFFI
-bindings under `app/src/main/java/app/light/wallet/core/` automatically. Both of
-those are generated and **git-ignored**.
+Then restart your terminal so `cargo` is on your `PATH`.
 
-Pinned toolchain (nothing to configure): Gradle 9.2.1 (committed wrapper) · AGP
-8.13 · Kotlin 2.2.20 · NDK `27.2.12479018` · `gl-client 0.6.0`. Only `arm64-v8a`
-is built (modern phones + the emulator on Apple Silicon) — add targets to
-`scripts/build-rust.sh` and `abiFilters` for more.
+### 3. Install protoc
 
-You will also need Greenlight developer credentials (a certificate + key) from
-the [Greenlight console](https://blockstream.github.io/greenlight/) to register
-or recover a node.
+Core Lightning's gRPC bindings are generated at build time and need the protocol
+buffer compiler:
+
+```bash
+brew install protobuf          # macOS
+sudo apt install -y protobuf-compiler   # Debian / Ubuntu
+```
+
+### 4. Clone the repository
+
+```bash
+git clone https://github.com/olegfomenko/light-app.git
+cd light-app
+```
+
+### 5. Run the setup & build script
+
+This installs everything else that is missing — the Android NDK, the
+`aarch64-linux-android` Rust target, `cargo-ndk` — and then builds the app. It is
+safe to re-run and only downloads what you do not already have.
+
+```bash
+./scripts/bootstrap.sh --build
+```
+
+The first run takes a while, mostly compiling the Rust core and its
+dependencies. When it finishes you have an APK at
+`app/build/outputs/apk/release/`.
+
+> Linux: the script assumes macOS paths and Homebrew. Install the NDK
+> yourself with `sdkmanager "ndk;27.2.12479018"`, then run
+> `rustup target add aarch64-linux-android` and `cargo install cargo-ndk`.
+
+### Release signing
+
+Release builds are signed with your own key when `app/keystore.properties`
+exists (it is git-ignored):
+
+```properties
+storeFile=/absolute/path/to/your-release.jks
+storePassword=…
+keyAlias=…
+keyPassword=…
+```
+
+Create the keystore with:
+
+```bash
+keytool -genkeypair -v -keystore ~/lightapp-upload.jks \
+  -alias upload -keyalg RSA -keysize 4096 -validity 10000
+```
+
+Without that file, `assembleRelease` falls back to the public Android debug key
+so a locally built APK still installs on your own device. `bundleRelease`, which
+produces the Play Store bundle, refuses to build without a real key.
 
 ## Security
 

@@ -81,10 +81,10 @@ command -v protoc >/dev/null 2>&1 || {
 }
 
 # ---------------------------------------------------------------- Build
-step "Building debug APK (compiles the Rust core too)"
-./gradlew :app:assembleDebug
+step "Building release APK (compiles the Rust core too)"
+./gradlew :app:assembleRelease
 
-[ "${1:-}" = "--build" ] && { step "Done (build only). APK: app/build/outputs/apk/debug/"; exit 0; }
+[ "${1:-}" = "--build" ] && { step "Done (build only). APK: app/build/outputs/apk/release/"; exit 0; }
 
 # ---------------------------------------------------------------- Emulator
 step "Looking for a device/emulator"
@@ -109,6 +109,6 @@ if ! adb devices | awk 'NR>1 && $2=="device"' | grep -q .; then
 fi
 
 step "Installing and launching LightApp"
-./gradlew :app:installDebug
+./gradlew :app:installRelease
 adb shell am start -n app.light.wallet/.MainActivity
 step "LightApp is running in the emulator 🎉"
