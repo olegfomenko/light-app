@@ -6,9 +6,16 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// Real release signing when app/keystore.properties exists (gitignored).
+// Without it, `assembleRelease` falls back to the debug key so a locally built
+// APK still installs on a dev device — but `bundleRelease` refuses to (see the
+// guard below), because a debug-signed bundle is useless to Play.
+val keystorePropsFile = rootProject.file("app/keystore.properties")
+val hasReleaseKeystore = keystorePropsFile.exists()
+
 android {
     namespace = "app.light.wallet"
-    compileSdk = 35
+    compileSdk = 36
     // Pinned so AGP auto-installs the right NDK on first build (licenses
     // are accepted once via Android Studio); r27+ needed for 16KB pages.
     ndkVersion = "27.2.12479018"
@@ -16,7 +23,7 @@ android {
     defaultConfig {
         applicationId = "app.light.wallet"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
 
@@ -26,11 +33,6 @@ android {
         }
     }
 
-    // Real release signing when app/keystore.properties exists (gitignored);
-    // otherwise the release build stays UNSIGNED so nobody ships a wallet
-    // signed with the public Android debug key.
-    val keystorePropsFile = rootProject.file("app/keystore.properties")
-    val hasReleaseKeystore = keystorePropsFile.exists()
     if (hasReleaseKeystore) {
         val props = Properties().apply { keystorePropsFile.inputStream().use { load(it) } }
         signingConfigs {
@@ -116,6 +118,24 @@ val buildRustCore = tasks.register<Exec>("buildRustCore") {
 
 tasks.named("preBuild") {
     dependsOn(buildRustCore)
+}
+
+// A Play upload must never be debug-signed: Google rejects the bundle outright,
+// and the public debug key could never be rotated into a real upload key. Fail
+// here rather than after a 17 MB upload.
+tasks.matching { it.name == "bundleRelease" }.configureEach {
+    doFirst {
+        if (!hasReleaseKeystore) {
+            throw GradleException(
+                "bundleRelease needs your own upload key — app/keystore.properties is missing.\n" +
+                    "Create the keystore (you choose and keep the password):\n" +
+                    "  keytool -genkeypair -v -keystore ~/lightapp-upload.jks \\\n" +
+                    "    -alias upload -keyalg RSA -keysize 4096 -validity 10000\n" +
+                    "then write app/keystore.properties (git-ignored) with storeFile / " +
+                    "storePassword / keyAlias / keyPassword.",
+            )
+        }
+    }
 }
 
 dependencies {
