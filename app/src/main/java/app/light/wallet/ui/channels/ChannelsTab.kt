@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -45,7 +45,7 @@ import app.light.wallet.ui.sheets.WalletSheet
 import app.light.wallet.ui.shortId
 import app.light.wallet.ui.statusColor
 import app.light.wallet.ui.theme.MonoFont
-import app.light.wallet.ui.theme.SpaceGrotesk
+
 import app.light.wallet.ui.theme.Tokens
 import kotlinx.coroutines.launch
 
@@ -165,18 +165,12 @@ private fun ChannelCard(ch: PeerChannel, onClick: () -> Unit) {
             .padding(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Box(
-                modifier = Modifier.size(32.dp).background(Tokens.Accent.copy(alpha = .1f), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    ch.peerId.take(2).uppercase(),
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = SpaceGrotesk, fontWeight = FontWeight.Bold, fontSize = 12.sp),
-                    color = Tokens.Accent,
-                )
-            }
             Column(modifier = Modifier.weight(1f)) {
-                Text(shortId(ch.peerId, 8), style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, fontSize = 15.sp))
+                Text(
+                    ch.peerAlias?.takeIf { it.isNotBlank() } ?: shortId(ch.peerId, 8),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold, fontSize = 15.sp),
+                    maxLines = 1,
+                )
                 Text(
                     ch.shortChannelId ?: shortId(ch.channelId, 8),
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.5.sp, fontFamily = MonoFont),

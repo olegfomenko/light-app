@@ -983,7 +983,7 @@ private fun ChannelDetailSheet(
     var error by remember { mutableStateOf<String?>(null) }
     var closed by remember { mutableStateOf<String?>(null) }
 
-    SheetTitle("Channel", onClose)
+    SheetTitle(ch.peerAlias?.takeIf { it.isNotBlank() } ?: "Channel", onClose)
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(bottom = 14.dp)) {
         Text(
             formatAmount(ch.spendableMsat, unit) + " " + unit.label,

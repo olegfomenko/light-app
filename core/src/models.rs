@@ -89,6 +89,9 @@ pub struct Funds {
 #[derive(uniffi::Record, Clone, Debug)]
 pub struct PeerChannel {
     pub peer_id: String,
+    /// Node alias from gossip (listnodes) — None when the peer is unknown
+    /// to our gossip store or has no alias.
+    pub peer_alias: Option<String>,
     pub peer_connected: bool,
     pub state: String,
     pub channel_id: Option<String>,

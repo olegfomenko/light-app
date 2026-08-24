@@ -527,6 +527,26 @@ impl LightNode {
             .await
             .map_err(rpc_err)?
             .into_inner();
+        // Resolve peer aliases from gossip — one listnodes per unique peer,
+        // best-effort (a peer missing from our gossip store just has no alias).
+        let mut aliases: std::collections::HashMap<Vec<u8>, Option<String>> =
+            std::collections::HashMap::new();
+        for ch in &r.channels {
+            if aliases.contains_key(&ch.peer_id) {
+                continue;
+            }
+            let alias = c
+                .list_nodes(cln::ListnodesRequest {
+                    id: Some(ch.peer_id.clone()),
+                    ..Default::default()
+                })
+                .await
+                .ok()
+                .and_then(|n| n.into_inner().nodes.into_iter().next())
+                .and_then(|n| n.alias)
+                .filter(|a| !a.trim().is_empty());
+            aliases.insert(ch.peer_id.clone(), alias);
+        }
         Ok(r.channels
             .iter()
             .map(|ch| {
@@ -534,6 +554,7 @@ impl LightNode {
                 let total = msat_of(&ch.total_msat);
                 PeerChannel {
                     peer_id: hexs(&ch.peer_id),
+                    peer_alias: aliases.get(&ch.peer_id).cloned().flatten(),
                     peer_connected: ch.peer_connected,
                     state: channel_state_name(ch.state),
                     channel_id: ch.channel_id.as_ref().map(|b| hexs(b)),

@@ -354,7 +354,6 @@ input{outline:none}
       <sc-for list="{{ channels }}" as="c" hint-placeholder-count="3">
         <div onClick="{{ c.open }}" style="background:#11171E;border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.35)">
           <div style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:50%;background:{{ c.dotBg }};display:flex;align-items:center;justify-content:center;font:700 12px Space Grotesk;color:{{ c.dotC }}">{{ c.initial }}</div>
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
               <span style="font-weight:700;font-size:15px">{{ c.alias }}</span>
               <span style="font-size:12.5px;color:#7E8B99;font-family:ui-monospace,monospace">{{ c.scid }}</span>
