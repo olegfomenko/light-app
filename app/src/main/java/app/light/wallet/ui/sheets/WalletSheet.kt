@@ -16,6 +16,7 @@ sealed interface WalletSheet {
     data class PaymentDetail(val pay: PayListEntry) : WalletSheet
     data class ActivePaymentDetail(val paymentId: Long) : WalletSheet
     data class ChannelDetail(val channel: PeerChannel) : WalletSheet
+    data object CheckRoute : WalletSheet                    // askrene getroutes dry-run
     data object NodeInfoSheet : WalletSheet
     data object Seed : WalletSheet
     data object DropWallet : WalletSheet

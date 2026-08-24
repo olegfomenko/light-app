@@ -520,6 +520,59 @@ impl LightNode {
         Ok(())
     }
 
+    /// askrene getroutes — dry-run a payment's routing without paying.
+    pub async fn get_routes(&self, params: GetRoutesParams) -> CoreResult<RoutesResult> {
+        let mut c = self.client.lock().await.clone();
+        let source = match &params.source {
+            Some(s) => hex::decode(s.trim())
+                .map_err(|e| CoreError::Msg(format!("bad source node id: {e}")))?,
+            None => {
+                c.getinfo(cln::GetinfoRequest::default())
+                    .await
+                    .map_err(rpc_err)?
+                    .into_inner()
+                    .id
+            }
+        };
+        let destination = hex::decode(params.destination.trim())
+            .map_err(|e| CoreError::Msg(format!("bad destination node id: {e}")))?;
+        let r = c
+            .get_routes(cln::GetroutesRequest {
+                source,
+                destination,
+                amount_msat: Some(cln::Amount { msat: params.amount_msat }),
+                layers: params.layers.clone(),
+                maxfee_msat: Some(cln::Amount { msat: params.maxfee_msat }),
+                final_cltv: params.final_cltv,
+                maxdelay: params.maxdelay,
+            })
+            .await
+            .map_err(rpc_err)?
+            .into_inner();
+        Ok(RoutesResult {
+            probability_ppm: r.probability_ppm,
+            routes: r
+                .routes
+                .iter()
+                .map(|rt| Route {
+                    probability_ppm: rt.probability_ppm,
+                    amount_msat: rt.amount_msat.as_ref().map(|a| a.msat).unwrap_or(0),
+                    final_cltv: rt.final_cltv,
+                    path: rt
+                        .path
+                        .iter()
+                        .map(|h| RouteHop {
+                            short_channel_id_dir: h.short_channel_id_dir.clone(),
+                            next_node_id: hexs(&h.next_node_id),
+                            amount_msat: h.amount_msat.as_ref().map(|a| a.msat).unwrap_or(0),
+                            delay: h.delay,
+                        })
+                        .collect(),
+                })
+                .collect(),
+        })
+    }
+
     pub async fn list_channels(&self) -> CoreResult<Vec<PeerChannel>> {
         let mut c = self.client.lock().await.clone();
         let r = c

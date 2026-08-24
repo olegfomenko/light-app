@@ -272,7 +272,12 @@ input{outline:none}
       </sc-for>
     </div>
     </sc-if>
-    <div onClick="{{ invCta }}" style="margin-top:16px;height:50px;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;cursor:pointer" style-hover="background:#FDE047">{{ invCtaLabel }}</div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <div onClick="{{ invCta }}" style="flex:1;min-width:0;height:50px;padding:0 8px;box-sizing:border-box;border-radius:999px;background:#FACC15;color:#241A02;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;white-space:nowrap;cursor:pointer" style-hover="background:#FDE047">{{ invCtaLabel }}</div>
+      <sc-if value="{{ invPayments }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ openRoutes }}" style="flex:1;min-width:0;height:50px;padding:0 8px;box-sizing:border-box;border-radius:999px;border:1px solid rgba(250,204,21,.35);color:#FACC15;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;font-size:15px;white-space:nowrap;cursor:pointer" style-hover="background:rgba(250,204,21,.08)"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="3.2" cy="12.8" r="2"></circle><circle cx="12.8" cy="3.2" r="2"></circle><path d="M5.2 12.8h3.4a2.6 2.6 0 0 0 2.6-2.6V5.2"></path></svg>Check route</div>
+      </sc-if>
+    </div>
   </div>
   </sc-if>
 
@@ -648,6 +653,68 @@ input{outline:none}
       </div>
     </sc-if>
 
+    <!-- GETROUTES -->
+    <sc-if value="{{ shRoutes }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:12.5px;font-weight:700;color:#9FB0BC">Source</div>
+        <div onClick="{{ hRtSelf }}" style="display:flex;align-items:center;gap:8px;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;cursor:pointer" style-hover="border-color:rgba(250,204,21,.4)">
+          <span style="flex:1;font:500 12.5px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rtSource }}</span>
+          <span style="font-size:11.5px;font-weight:800;color:#FACC15;flex-shrink:0">{{ rtSelfLabel }}</span>
+        </div>
+        <div style="font-size:12.5px;font-weight:700;color:#9FB0BC;margin-top:2px">Destination</div>
+        <input value="{{ rtDest }}" onChange="{{ hRtDest }}" placeholder="Destination node ID" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:500 12.5px ui-monospace,monospace" style-focus="border-color:#FACC15">
+        <div style="display:flex;gap:10px;margin-top:2px">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Amount (msat)</span><input value="{{ rtAmount }}" onChange="{{ hRtAmount }}" inputMode="numeric" placeholder="25000000" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+          <div style="width:118px;flex-shrink:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Final CLTV</span><input value="{{ rtCltv }}" onChange="{{ hRtCltv }}" inputMode="numeric" placeholder="18" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:2px">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Max fee (msat)</span><input value="{{ rtMaxFee }}" onChange="{{ hRtMaxFee }}" inputMode="numeric" placeholder="250000" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+          <div style="width:118px;flex-shrink:0;display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Max delay</span><input value="{{ rtMaxDelay }}" onChange="{{ hRtMaxDelay }}" inputMode="numeric" placeholder="2016" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif" style-focus="border-color:#FACC15"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px">
+          <span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Max parts</span>
+          <input value="{{ rtMaxParts }}" onChange="{{ hRtMaxParts }}" inputMode="numeric" placeholder="100" style="width:100%;box-sizing:border-box;background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:12px 14px;color:#EEF3F6;font:600 15px Space Grotesk,sans-serif" style-focus="border-color:#FACC15">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px">
+          <span style="font-size:12.5px;font-weight:700;color:#9FB0BC">Layers</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ rtLayerOpts }}" as="l" hint-placeholder-count="4">
+              <div onClick="{{ l.pick }}" style="padding:9px 15px;border-radius:999px;font-weight:800;font-size:12.5px;cursor:pointer;background:{{ l.bg }};color:{{ l.c }};border:1px solid {{ l.bd }};font-family:ui-monospace,monospace">{{ l.label }}</div>
+            </sc-for>
+          </div>
+          <input value="{{ rtLayerExtra }}" onChange="{{ hRtLayerExtra }}" placeholder="Custom layer names, comma separated" spellcheck="false" style="background:#0D1319;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 12px;color:#B7C2CC;font:500 12px ui-monospace,monospace" style-focus="border-color:#FACC15">
+        </div>
+        <div onClick="{{ hRoutesRun }}" style="margin-top:8px;height:52px;border-radius:999px;background:{{ rtBtnBg }};color:{{ rtBtnC }};display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:15px;cursor:pointer">Check route</div>
+        <sc-if value="{{ rtLoading }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 0">
+            <div style="width:14px;height:14px;border-radius:50%;border:2px solid rgba(250,204,21,.25);border-top-color:#FACC15;animation:vspin .8s linear infinite"></div>
+            <span style="font-size:13px;font-weight:700;color:#9FB0BC">Querying askrene…</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ rtHasResult }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px;animation:vfade .2s">
+            <div style="display:flex;align-items:baseline;gap:8px;padding:4px 2px 0"><span style="font-size:12.5px;font-weight:700;color:#9FB0BC;flex:1">{{ rtSummary }}</span><span style="font:600 13px ui-monospace,monospace;color:#FACC15">{{ rtTotalFee }}</span></div>
+            <sc-for list="{{ rtRoutes }}" as="r" hint-placeholder-count="2">
+              <div style="background:#0D1319;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px 14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font:700 12px ui-monospace,monospace;color:#FACC15;background:rgba(250,204,21,.08);border-radius:999px;padding:3px 10px">Part {{ r.n }}</span>
+                  <span style="flex:1;font-size:12.5px;color:#7E8B99">{{ r.hops }} hops · delay {{ r.delay }}</span>
+                  <span style="font:600 13.5px Space Grotesk,sans-serif;color:#EEF3F6">{{ r.amt }}</span>
+                </div>
+                <sc-for list="{{ r.path }}" as="h" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:22px;flex-shrink:0;font:600 11px ui-monospace,monospace;color:#5A6673">{{ h.i }}</span>
+                    <span style="flex:1;min-width:0;font:500 12px ui-monospace,monospace;color:#B7C2CC;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.scid }}</span>
+                    <span style="font-size:12px;color:#7E8B99;flex-shrink:0">{{ h.fee }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
     <!-- SEED REVEAL -->
     <sc-if value="{{ shSeed }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:14px">
@@ -703,6 +770,7 @@ class Component extends DCLogic {
       fPayBolt: 'lnbc250u1p5vw2xkpp5qtw3m9k4e7dxu2sfzh8g6yl0c3v9n4r7jd8aeq2u6kfsxp0hg4lqdq2gdhkven9v5sxxmmfdemx76trv5sq9rzjq2vw8', fPayAdv: false,
       pa_amount: '', pa_maxfee: '', pa_retry_for: '60', pa_partial_msat: '', pa_layers: '', pa_maxdelay: '2016', pa_payer_note: '', pa_label: '', pa_localinvreqid: '',
       fChConnect: '', fChAmt: '', fChMinconf: '1', fChFeerate: 'Normal', fChAnnounce: true,
+      rtSelf: true, rtDest: '', rtAmount: '25000000', rtCltv: '18', rtMaxFee: '250000', rtMaxDelay: '2016', rtMaxParts: '100', rtLayers: ['auto.localchans', 'auto.no_mpp_support'], rtLayerExtra: '', rtLoading: false, rtResult: null,
       invoices: [
         { id: 1, label: 'inv-88214', desc: 'Podcast boost', amt: 21000, status: 'paid', ts: now - 36e5 * 2, hash: '9f2c…b41a', preimage: '5d7e…90cc', expiry: '1 hour', bolt11: 'lnbc210u1p5vw2xk…', paidAt: now - 36e5 * 1.8 },
         { id: 2, label: 'inv-88215', desc: 'Consulting — March', amt: 450000, status: 'unpaid', ts: now - 36e5 * 5, hash: '3ab1…77e0', preimage: null, expiry: '24 hours', bolt11: 'lnbc4500u1p5aa9zz…', paidAt: null },
@@ -876,7 +944,7 @@ class Component extends DCLogic {
       detailRows = [R('Node ID', this.nodeId, { copy: 1 }), R('Implementation', 'Core Lightning v25.02 (Greenlight)', { sans: 1 }), R('Network', network, { sans: 1 }), R('Block height', '905 114'), R('Scheduler', 'Connected · us-east', { c: '#34D399', sans: 1 }), R('Spendable', this.amt(outN), { c: acc, sans: 1 }), R('Receivable', this.amt(inN), { c: '#A78BFA', sans: 1 })];
 
     }
-    const sheetTitles = { receive: 'Receive bitcoin', send: 'Send on-chain', newInvoice: 'Create invoice', pay: 'Pay invoice', openCh: 'Open channel', seed: 'Recovery phrase', drop: 'Delete wallet data', detail: detailTitle };
+    const sheetTitles = { receive: 'Receive bitcoin', send: 'Send on-chain', newInvoice: 'Create invoice', pay: 'Pay invoice', openCh: 'Open channel', routes: 'Check route', seed: 'Recovery phrase', drop: 'Delete wallet data', detail: detailTitle };
     const payReady = s.fPayBolt.trim().length > 20;
     const invReady = s.fInvAny || String(s.fInvAmt).trim();
     const sendReady = s.fSendAddr.trim() && s.fSendAmt.trim();
@@ -956,6 +1024,26 @@ class Component extends DCLogic {
       hasPending: s.payments.some(p => p.status === 'pending'), pendingN: s.payments.filter(p => p.status === 'pending').length,
       invoices: s.invoices.map(v => { const st = stMap[v.status]; return { desc: v.desc, label: v.label, time: this.ago(v.ts), amtF: v.amt ? this.val(v.amt) : 'any', stBg: st[0], stC: st[1], status: st[2], open: () => this.openDetail('invoice', v) }; }),
       payments: s.payments.map(p => { const st = stMap[p.status]; const pend = p.status === 'pending'; return { dest: p.desc || p.dest, method: p.method, time: this.ago(p.ts), amtF: this.val(p.amt), stBg: st[0], stC: st[1], status: st[2], anim: 'none', iconBg: st[0], icon: pend ? this.spin(st[1]) : this.icon(p.status === 'failed' ? 'x' : 'bolt', st[1], 14), open: () => this.openDetail('payment', p) }; }),
+      openRoutes: () => this.setState({ sheet: 'routes' }),
+      rtSource: s.rtSelf ? this.nodeId : 'Custom source node ID',
+      rtSelfLabel: s.rtSelf ? 'This node' : 'Set',
+      hRtSelf: () => this.setState({ rtSelf: !s.rtSelf }),
+      rtDest: s.rtDest, hRtDest: this.set('rtDest'),
+      rtAmount: s.rtAmount, hRtAmount: this.set('rtAmount'),
+      rtCltv: s.rtCltv, hRtCltv: this.set('rtCltv'),
+      rtMaxFee: s.rtMaxFee, hRtMaxFee: this.set('rtMaxFee'),
+      rtMaxDelay: s.rtMaxDelay, hRtMaxDelay: this.set('rtMaxDelay'),
+      rtMaxParts: s.rtMaxParts, hRtMaxParts: this.set('rtMaxParts'),
+      rtLayerOpts: ['auto.localchans', 'auto.no_mpp_support', 'auto.sourcefree', 'xpay'].map(o => ({ label: o, ...chip(s.rtLayers.includes(o)), pick: () => this.setState({ rtLayers: s.rtLayers.includes(o) ? s.rtLayers.filter(x => x !== o) : [...s.rtLayers, o] }) })),
+      rtLayerExtra: s.rtLayerExtra, hRtLayerExtra: this.set('rtLayerExtra'),
+      rtBtnBg: s.rtDest.trim() ? acc : mut, rtBtnC: s.rtDest.trim() ? accD : '#5A6673',
+      hRoutesRun: () => { if (!s.rtDest.trim()) return; this.setState({ rtLoading: true, rtResult: null }); setTimeout(() => this.setState({ rtLoading: false, rtResult: 1 }), 1400); },
+      rtLoading: s.rtLoading, rtHasResult: !!s.rtResult && !s.rtLoading,
+      rtSummary: '2 parts found · probability 94%', rtTotalFee: '187 msat fee',
+      rtRoutes: [
+        { n: 1, hops: 3, delay: '86', amt: this.val(18000), path: [{ i: 1, scid: '848291x1204x1/0', fee: '48 msat' }, { i: 2, scid: '851002x88x0/1', fee: '61 msat' }, { i: 3, scid: '862710x455x0/0', fee: '0 msat' }] },
+        { n: 2, hops: 2, delay: '58', amt: this.val(7000), path: [{ i: 1, scid: '852440x310x1/1', fee: '78 msat' }, { i: 2, scid: '870114x92x0/0', fee: '0 msat' }] },
+      ],
       invCta: () => this.setState({ sheet: s.invTab === 'created' ? 'newInvoice' : 'pay' }),
       invCtaLabel: s.invTab === 'created' ? 'Create invoice' : 'Pay invoice',
       utxoFilters: ['unconfirmed', 'confirmed', 'spent', 'immature'].map(o => ({ label: o[0].toUpperCase() + o.slice(1), ...chip(s.utxoFilter === o), pick: () => this.setState({ utxoFilter: o }) })),
@@ -982,7 +1070,7 @@ class Component extends DCLogic {
       channels: s.channels.map(c => { const pct = Math.round(c.ours / c.cap * 100); const stC = c.state === 'NORMAL' ? '#34D399' : c.state === 'CLOSING' ? '#F8716F' : '#FB923C'; return { alias: c.alias, scid: c.scid, initial: c.alias[0].toUpperCase(), dotBg: 'rgba(250,204,21,.1)', dotC: acc, state: c.state, stC, stBg: c.state === 'NORMAL' ? 'rgba(52,211,153,.1)' : c.state === 'CLOSING' ? 'rgba(248,113,111,.1)' : 'rgba(251,146,60,.1)', pct: pct + '%', oursF: this.val(c.ours), theirsF: this.val(c.cap - c.ours), open: () => this.openDetail('channel', c) }; }),
       sheetOpen: !!s.sheet, sheetTitle: sheetTitles[s.sheet] || '',
       closeSheet: () => this.setState({ sheet: null }),
-      shReceive: s.sheet === 'receive', shSend: s.sheet === 'send', shNewInvoice: s.sheet === 'newInvoice', shPay: s.sheet === 'pay', shOpenCh: s.sheet === 'openCh', shDetail: s.sheet === 'detail', shSeed: s.sheet === 'seed', shDrop: s.sheet === 'drop',
+      shReceive: s.sheet === 'receive', shSend: s.sheet === 'send', shNewInvoice: s.sheet === 'newInvoice', shPay: s.sheet === 'pay', shOpenCh: s.sheet === 'openCh', shDetail: s.sheet === 'detail', shSeed: s.sheet === 'seed', shDrop: s.sheet === 'drop', shRoutes: s.sheet === 'routes',
       openReceive: () => this.setState({ sheet: 'receive' }), openSend: () => this.setState({ sheet: 'send' }),
       openNewInvoice: () => this.setState({ sheet: 'newInvoice' }), openPay: () => this.setState({ sheet: 'pay' }),
       openNode: () => this.openDetail('node', {}), openOpenCh: () => this.setState({ sheet: 'openCh' }),

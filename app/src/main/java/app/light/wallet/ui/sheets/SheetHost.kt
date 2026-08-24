@@ -125,6 +125,7 @@ fun SheetHost(
                 is WalletSheet.PaymentDetail -> PaymentDetailSheet(repository, sheet, onClose)
                 is WalletSheet.ActivePaymentDetail -> ActivePaymentSheet(repository, sheet.paymentId, onClose)
                 is WalletSheet.ChannelDetail -> ChannelDetailSheet(repository, sheet, onClose)
+                is WalletSheet.CheckRoute -> CheckRouteSheet(repository, onClose)
                 is WalletSheet.NodeInfoSheet -> NodeSheet(repository, onClose)
                 is WalletSheet.Seed -> SeedSheet(repository, onClose)
                 is WalletSheet.DropWallet -> DropSheet(repository, onCancel = onClose) { onClose(); onWalletWiped() }
@@ -1060,6 +1061,219 @@ private fun ChannelDetailSheet(
                 )
             }.onSuccess { closed = it.closeType }.onFailure { error = it.message }
             busy = false
+        }
+    }
+}
+
+// ─────────────────────────── Check route (askrene) ───────────────────────────
+
+@Composable
+private fun CheckRouteSheet(repository: WalletRepository, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
+    val scope = rememberCoroutineScope()
+    val connState by repository.connState.collectAsState()
+    val ourId = (connState as? app.light.wallet.data.ConnState.Connected)?.info?.id
+
+    var selfSource by remember { mutableStateOf(true) }
+    var source by remember { mutableStateOf("") }
+    var dest by remember { mutableStateOf("") }
+    // Defaults mirror the design's prefills (converted into the display unit).
+    var amount by remember { mutableStateOf(formatAmount(25_000_000uL, unit).replace(" ", "")) }
+    var cltv by remember { mutableStateOf("18") }
+    var maxFee by remember { mutableStateOf(formatAmount(250_000uL, unit).replace(" ", "")) }
+    var maxDelay by remember { mutableStateOf("2016") }
+    val layerOptions = listOf("auto.localchans", "auto.no_mpp_support", "auto.sourcefree", "xpay")
+    var layers by remember { mutableStateOf(setOf("auto.localchans", "auto.no_mpp_support")) }
+    var layerExtra by remember { mutableStateOf("") }
+    var busy by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+    var result by remember { mutableStateOf<app.light.wallet.core.RoutesResult?>(null) }
+
+    SheetTitle("Check route", onClose)
+
+    FieldLabel("Source")
+    if (selfSource) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Tokens.Field, RoundedCornerShape(13.dp))
+                .border(1.dp, Color(0x17FFFFFF), RoundedCornerShape(13.dp))
+                .noRipple { selfSource = false }
+                .padding(horizontal = 14.dp, vertical = 13.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                ourId?.let { shortId(it, 14) } ?: "—",
+                style = MaterialTheme.typography.bodySmall.copy(fontFamily = MonoFont, fontSize = 12.5.sp),
+                color = Tokens.TextMid, modifier = Modifier.weight(1f), maxLines = 1,
+            )
+            Text(
+                "This node",
+                style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold),
+                color = Tokens.Accent,
+            )
+        }
+    } else {
+        DesignField(source, { source = it }, "Source node ID", mono = true, lines = 2)
+        Text(
+            "Use this node",
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.5.sp),
+            color = Tokens.Accent,
+            modifier = Modifier.padding(top = 6.dp).noRipple { selfSource = true; source = "" },
+        )
+    }
+
+    FieldLabel("Destination", topPadding = 12)
+    DesignField(dest, { dest = it }, "Destination node ID", mono = true, lines = 2)
+
+    Row(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(modifier = Modifier.weight(1f)) {
+            FieldLabel("Amount (${unit.label})", topPadding = 0)
+            DesignField(amount, { amount = filterAmountInput(it, unit) }, "0", numeric = true)
+        }
+        Column(modifier = Modifier.width(118.dp)) {
+            FieldLabel("Final CLTV", topPadding = 0)
+            DesignField(cltv, { cltv = it.filter { c -> c.isDigit() } }, "18", numeric = true)
+        }
+    }
+    Row(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(modifier = Modifier.weight(1f)) {
+            FieldLabel("Max fee (${unit.label})", topPadding = 0)
+            DesignField(maxFee, { maxFee = filterAmountInput(it, unit) }, "0", numeric = true)
+        }
+        Column(modifier = Modifier.width(118.dp)) {
+            FieldLabel("Max delay", topPadding = 0)
+            DesignField(maxDelay, { maxDelay = it.filter { c -> c.isDigit() } }, "2016", numeric = true)
+        }
+    }
+
+    FieldLabel("Layers", topPadding = 12)
+    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+    androidx.compose.foundation.layout.FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        layerOptions.forEach { l ->
+            val on = l in layers
+            Text(
+                l,
+                style = MaterialTheme.typography.labelMedium.copy(fontFamily = MonoFont, fontSize = 12.5.sp, fontWeight = FontWeight.Bold),
+                color = if (on) Tokens.Accent else Tokens.Dim,
+                modifier = Modifier
+                    .background(if (on) Tokens.Accent.copy(alpha = .08f) else Color.Transparent, RoundedCornerShape(999.dp))
+                    .border(1.dp, if (on) Tokens.Accent.copy(alpha = .4f) else Color(0x17FFFFFF), RoundedCornerShape(999.dp))
+                    .noRipple { layers = if (on) layers - l else layers + l }
+                    .padding(horizontal = 15.dp, vertical = 9.dp),
+            )
+        }
+    }
+    androidx.compose.foundation.layout.Spacer(Modifier.height(8.dp))
+    DesignField(
+        layerExtra, { layerExtra = it }, "Custom layer names, comma separated",
+        mono = true,
+    )
+
+    val amountMsat = parseAmountToMsat(amount, unit)
+    val maxFeeMsat = parseAmountToMsat(maxFee, unit)
+    val ready = !busy && dest.isNotBlank() && amountMsat != null && maxFeeMsat != null &&
+        (selfSource || source.isNotBlank())
+    PillButton(
+        if (busy) "Querying askrene…" else "Check route",
+        modifier = Modifier.fillMaxWidth().padding(top = 14.dp),
+        enabled = ready, height = 52,
+    ) {
+        busy = true; error = null; result = null
+        scope.launch {
+            runCatching {
+                repository.requireNode().getRoutes(
+                    app.light.wallet.core.GetRoutesParams(
+                        source = if (selfSource) null else source.trim(),
+                        destination = dest.trim(),
+                        amountMsat = amountMsat!!,
+                        layers = (layers.toList() + layerExtra.split(",").map { it.trim() }.filter { it.isNotEmpty() }),
+                        maxfeeMsat = maxFeeMsat!!,
+                        finalCltv = cltv.toUIntOrNull(),
+                        maxdelay = maxDelay.toUIntOrNull(),
+                    ),
+                )
+            }.onSuccess { result = it }.onFailure { error = it.message ?: "getroutes failed" }
+            busy = false
+        }
+    }
+
+    error?.let {
+        Text(it, color = Tokens.Red, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 12.dp))
+    }
+    result?.let { r ->
+        val requested = amountMsat ?: 0uL
+        val sent = r.routes.sumOf { rt -> (rt.path.firstOrNull()?.amountMsat ?: rt.amountMsat).toLong() }.toULong()
+        val fee = if (sent > requested) sent - requested else 0uL
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 4.dp),
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            Text(
+                "${r.routes.size} part${if (r.routes.size == 1) "" else "s"} found · " +
+                    "probability ${"%.0f".format(java.util.Locale.US, r.probabilityPpm.toLong() / 10_000.0)}%",
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                color = Tokens.Label, modifier = Modifier.weight(1f),
+            )
+            Text(
+                formatAmountFull(fee, unit) + " fee",
+                style = MaterialTheme.typography.bodySmall.copy(fontFamily = MonoFont, fontSize = 13.sp),
+                color = Tokens.Accent,
+            )
+        }
+        r.routes.forEachIndexed { i, rt ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
+                    .background(Tokens.Field, RoundedCornerShape(14.dp))
+                    .border(1.dp, Color(0x12FFFFFF), RoundedCornerShape(14.dp))
+                    .padding(horizontal = 14.dp, vertical = 13.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        "Part ${i + 1}",
+                        style = MaterialTheme.typography.labelMedium.copy(fontFamily = MonoFont, fontSize = 12.sp, fontWeight = FontWeight.Bold),
+                        color = Tokens.Accent,
+                        modifier = Modifier
+                            .background(Tokens.Accent.copy(alpha = .08f), RoundedCornerShape(999.dp))
+                            .padding(horizontal = 10.dp, vertical = 3.dp),
+                    )
+                    Text(
+                        "${rt.path.size} hop${if (rt.path.size == 1) "" else "s"} · delay ${rt.path.firstOrNull()?.delay ?: 0}",
+                        style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.5.sp),
+                        color = Tokens.Dim, modifier = Modifier.weight(1f),
+                    )
+                    Text(
+                        formatAmount(rt.amountMsat, unit),
+                        style = MaterialTheme.typography.bodyMedium.copy(fontFamily = SpaceGrotesk, fontSize = 13.5.sp, fontWeight = FontWeight.SemiBold),
+                    )
+                }
+                rt.path.forEachIndexed { hi, hop ->
+                    val hopFee = if (hi + 1 < rt.path.size) hop.amountMsat - rt.path[hi + 1].amountMsat else 0uL
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text(
+                            "${hi + 1}",
+                            style = MaterialTheme.typography.bodySmall.copy(fontFamily = MonoFont, fontSize = 11.sp, fontWeight = FontWeight.SemiBold),
+                            color = Tokens.Faint, modifier = Modifier.width(22.dp),
+                        )
+                        Text(
+                            hop.shortChannelIdDir ?: shortId(hop.nextNodeId, 8),
+                            style = MaterialTheme.typography.bodySmall.copy(fontFamily = MonoFont, fontSize = 12.sp),
+                            color = Tokens.TextMid, modifier = Modifier.weight(1f), maxLines = 1,
+                        )
+                        Text(
+                            formatAmountFull(hopFee, unit),
+                            style = MaterialTheme.typography.bodySmall.copy(fontSize = 12.sp),
+                            color = Tokens.Dim,
+                        )
+                    }
+                }
+            }
         }
     }
 }

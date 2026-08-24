@@ -39,9 +39,9 @@ a clean UI, instead of a locked-down "balance and a send button".
       <img src="docs/screenshots/invoices-payments.png" width="260" alt="Invoices — payments"><br>
       <b>Invoices &amp; payments</b><br>
       <sub>Created invoices (paid / unpaid / expired) and sent payments,
-      labeled by their invoice description. Payments run asynchronously — a
-      routing payment shows as in-flight while the app stays fully
-      usable.</sub>
+      labeled by their invoice description. Payments run asynchronously, and
+      the Payments segment carries a <b>Check route</b> shortcut for
+      dry-running a payment before sending it.</sub>
     </td>
     <td align="center">
       <img src="docs/screenshots/transactions.png" width="260" alt="Transactions tab"><br>
@@ -105,7 +105,16 @@ a clean UI, instead of a locked-down "balance and a send button".
     </td>
   </tr>
   <tr>
-    <td align="center" colspan="3">
+    <td align="center">
+      <img src="docs/screenshots/check-route-sheet.png" width="260" alt="Check route sheet"><br>
+      <b>Check route</b><br>
+      <sub>Dry-run a payment with askrene's <code>getroutes</code>: source /
+      destination, amount, max fee, CLTV and delay bounds, and route layers
+      (<code>auto.localchans</code>, <code>xpay</code>, custom). Returns the
+      parts askrene would use, with per-hop fees and success
+      probability.</sub>
+    </td>
+    <td align="center" colspan="2">
       <img src="docs/screenshots/settings.png" width="260" alt="Settings tab"><br>
       <b>Settings</b><br>
       <sub>Display unit (sat / msat / BTC), reveal the recovery phrase,

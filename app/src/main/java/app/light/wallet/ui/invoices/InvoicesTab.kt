@@ -146,12 +146,24 @@ fun InvoicesTab(
             }
         }
 
-        PillButton(
-            if (segment == 0) "Create invoice" else "Pay invoice",
+        Row(
             modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-            height = 50,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            onOpenSheet(if (segment == 0) WalletSheet.NewInvoice else WalletSheet.Pay())
+            PillButton(
+                if (segment == 0) "Create invoice" else "Pay invoice",
+                modifier = Modifier.weight(1f),
+                height = 50,
+            ) {
+                onOpenSheet(if (segment == 0) WalletSheet.NewInvoice else WalletSheet.Pay())
+            }
+            if (segment == 1) {
+                app.light.wallet.ui.OutlinePillButton(
+                    "Check route",
+                    modifier = Modifier.weight(1f),
+                    height = 50,
+                ) { onOpenSheet(WalletSheet.CheckRoute) }
+            }
         }
     }
     }

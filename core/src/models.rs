@@ -204,6 +204,46 @@ pub struct WithdrawResult {
 }
 
 // ---------------------------------------------------------------------------
+// Routes (askrene getroutes)
+// ---------------------------------------------------------------------------
+
+#[derive(uniffi::Record, Clone, Debug)]
+pub struct GetRoutesParams {
+    /// None => route from our own node.
+    pub source: Option<String>,
+    pub destination: String,
+    pub amount_msat: u64,
+    pub layers: Vec<String>,
+    pub maxfee_msat: u64,
+    pub final_cltv: Option<u32>,
+    pub maxdelay: Option<u32>,
+}
+
+#[derive(uniffi::Record, Clone, Debug)]
+pub struct RouteHop {
+    pub short_channel_id_dir: Option<String>,
+    pub next_node_id: String,
+    /// Amount entering this hop (includes downstream fees).
+    pub amount_msat: u64,
+    pub delay: u32,
+}
+
+#[derive(uniffi::Record, Clone, Debug)]
+pub struct Route {
+    pub probability_ppm: u64,
+    /// Amount this part delivers to the destination.
+    pub amount_msat: u64,
+    pub final_cltv: Option<u32>,
+    pub path: Vec<RouteHop>,
+}
+
+#[derive(uniffi::Record, Clone, Debug)]
+pub struct RoutesResult {
+    pub probability_ppm: u64,
+    pub routes: Vec<Route>,
+}
+
+// ---------------------------------------------------------------------------
 // Invoices
 // ---------------------------------------------------------------------------
 
