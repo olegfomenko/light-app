@@ -35,6 +35,34 @@ fun formatMsatAsSat(msat: ULong?): String =
     if (msat == null) "—"
     else String.format(Locale.US, "%,d sat", (msat / 1000uL).toLong()).replace(',', ' ')
 
+/** Parse an amount the user typed in their display unit into msat. */
+fun parseAmountToMsat(input: String, unit: DisplayUnit): ULong? {
+    val t = input.trim().replace(" ", "")
+    if (t.isEmpty()) return null
+    return when (unit) {
+        DisplayUnit.SAT -> t.toULongOrNull()?.let { it * 1000uL }
+        DisplayUnit.MSAT -> t.toULongOrNull()
+        DisplayUnit.BTC -> {
+            val d = t.toBigDecimalOrNull() ?: return null
+            if (d.signum() < 0) return null
+            val msat = d.movePointRight(11) // 1 BTC = 1e11 msat
+            if (msat.stripTrailingZeros().scale() > 0) return null // finer than 1 msat
+            val bi = msat.toBigInteger()
+            if (bi.bitLength() > 63) null else bi.toLong().toULong()
+        }
+    }
+}
+
+/** Input filter for an amount field: digits, plus a single dot in BTC mode. */
+fun filterAmountInput(s: String, unit: DisplayUnit): String =
+    if (unit == DisplayUnit.BTC) {
+        val c = s.filter { it.isDigit() || it == '.' }
+        val i = c.indexOf('.')
+        if (i == -1) c else c.substring(0, i + 1) + c.substring(i + 1).replace(".", "")
+    } else {
+        s.filter { it.isDigit() }
+    }
+
 /**
  * Full-precision amount in the user's display unit, label included.
  * Sub-sat precision is never silently dropped: a 312 msat fee shows as

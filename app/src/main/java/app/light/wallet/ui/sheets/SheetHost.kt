@@ -62,7 +62,9 @@ import app.light.wallet.ui.DisplayUnit
 import app.light.wallet.ui.copyToClipboard
 import app.light.wallet.ui.expiresIn
 import app.light.wallet.ui.formatAmount
+import app.light.wallet.ui.filterAmountInput
 import app.light.wallet.ui.formatAmountFull
+import app.light.wallet.ui.parseAmountToMsat
 import app.light.wallet.ui.formatUnixTime
 import app.light.wallet.ui.qrBitmap
 import app.light.wallet.ui.shortId
@@ -192,7 +194,7 @@ private fun DesignField(
         placeholder = { Text(placeholder, color = Tokens.Faint) },
         minLines = lines,
         maxLines = if (lines > 1) lines + 1 else 1,
-        keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
+        keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Decimal) else KeyboardOptions.Default,
         textStyle = when {
             big -> TextStyle(fontFamily = SpaceGrotesk, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, color = Tokens.Text)
             mono -> TextStyle(fontFamily = MonoFont, fontSize = 12.sp, color = Tokens.TextMid, lineHeight = 18.sp)
@@ -302,8 +304,8 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
     }
     FieldLabel("Destination address")
     DesignField(addr, { addr = it }, "bc1q…", mono = true)
-    FieldLabel("Amount (sats)", topPadding = 12)
-    DesignField(amount, { amount = it.filter { c -> c.isDigit() }; sendAll = false }, "0", numeric = true, big = true)
+    FieldLabel("Amount (${unit.label})", topPadding = 12)
+    DesignField(amount, { amount = filterAmountInput(it, unit); sendAll = false }, "0", numeric = true, big = true)
     run {
         val funds by repository.funds.collectAsState()
         val available = funds?.let { it.onchainConfirmedMsat / 1000uL } ?: 0uL
@@ -317,7 +319,7 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
                 "Send max",
                 style = MaterialTheme.typography.labelMedium.copy(fontSize = 11.5.sp),
                 color = Tokens.Accent,
-                modifier = Modifier.noRipple { sendAll = true; amount = available.toString() },
+                modifier = Modifier.noRipple { sendAll = true; amount = formatAmount(available * 1000uL, unit).replace(" ", "") },
             )
         }
     }
@@ -344,7 +346,7 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
     PillButton(
         if (busy) "Broadcasting…" else "Send on-chain",
         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
-        enabled = !busy && addr.isNotBlank() && amount.toULongOrNull() != null,
+        enabled = !busy && addr.isNotBlank() && parseAmountToMsat(amount, unit) != null,
     ) {
         busy = true; error = null
         scope.launch {
@@ -352,7 +354,7 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
                 repository.requireNode().withdraw(
                     WithdrawParams(
                         destination = addr.trim(),
-                        amountSat = if (sendAll) 0uL else amount.toULong(),
+                        amountSat = if (sendAll) 0uL else (parseAmountToMsat(amount, unit) ?: 0uL) / 1000uL,
                         all = sendAll, minconf = null, feerate = feerate,
                     ),
                 )
@@ -366,6 +368,7 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
 
 @Composable
 private fun NewInvoiceSheet(repository: WalletRepository, onOpenSheet: (WalletSheet) -> Unit, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val scope = rememberCoroutineScope()
     var anyAmount by remember { mutableStateOf(false) }
     var amount by remember { mutableStateOf("") }
@@ -387,7 +390,7 @@ private fun NewInvoiceSheet(repository: WalletRepository, onOpenSheet: (WalletSh
     SheetTitle("Create invoice", onClose)
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            "Amount (sats)",
+            "Amount (${unit.label})",
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold),
             color = Tokens.Dim, modifier = Modifier.weight(1f),
         )
@@ -406,7 +409,15 @@ private fun NewInvoiceSheet(repository: WalletRepository, onOpenSheet: (WalletSh
     }
     if (!anyAmount) {
         Box(Modifier.padding(top = 8.dp)) {
-            DesignField(amount, { amount = it.filter { c -> c.isDigit() } }, "25 000", numeric = true, big = true)
+            DesignField(
+                amount, { amount = filterAmountInput(it, unit) },
+                when (unit) {
+                    DisplayUnit.SAT -> "25 000"
+                    DisplayUnit.MSAT -> "25 000 000"
+                    DisplayUnit.BTC -> "0.00025"
+                },
+                numeric = true, big = true,
+            )
         }
     }
     FieldLabel("Description", topPadding = 12)
@@ -514,7 +525,7 @@ private fun NewInvoiceSheet(repository: WalletRepository, onOpenSheet: (WalletSh
     PillButton(
         if (busy) "Creating…" else "Create invoice",
         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
-        enabled = !busy && (anyAmount || amount.toULongOrNull() != null),
+        enabled = !busy && (anyAmount || parseAmountToMsat(amount, unit) != null),
     ) {
         busy = true; error = null
         scope.launch {
@@ -523,7 +534,7 @@ private fun NewInvoiceSheet(repository: WalletRepository, onOpenSheet: (WalletSh
             runCatching {
                 repository.createInvoice(
                     CreateInvoiceParams(
-                        amountMsat = if (anyAmount) null else amount.toULong() * 1000uL,
+                        amountMsat = if (anyAmount) null else parseAmountToMsat(amount, unit),
                         description = desc,
                         label = customLabel.ifBlank { "lightapp-${System.currentTimeMillis()}" },
                         expiry = if (expiry == 0uL) null else expiry,
@@ -642,8 +653,8 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
             DecRow("Expires", expiresIn(d.createdAt?.let { c -> d.expiry?.let { e -> c + e } }), orange = true)
         }
         if (d.amountMsat == null) {
-            FieldLabel("Amount to pay (sats)", topPadding = 12)
-            DesignField(amountOverride, { amountOverride = it.filter { c -> c.isDigit() } }, "0", numeric = true, big = true)
+            FieldLabel("Amount to pay (${unit.label})", topPadding = 12)
+            DesignField(amountOverride, { amountOverride = filterAmountInput(it, unit) }, "0", numeric = true, big = true)
         }
     }
 
@@ -656,8 +667,8 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
     if (showAdv) {
         Row(modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text("maxfee (sats)", style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Faint)
-                DesignField(maxFee, { maxFee = it.filter { c -> c.isDigit() } }, "auto", numeric = true)
+                Text("maxfee (${unit.label})", style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Faint)
+                DesignField(maxFee, { maxFee = filterAmountInput(it, unit) }, "auto", numeric = true)
             }
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text("retry_for (s)", style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Faint)
@@ -696,8 +707,8 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
     }
     error?.let { Text(it, color = Tokens.Red, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 10.dp)) }
 
-    val amountKnown = decoded?.amountMsat != null || amountOverride.toULongOrNull() != null
-    val payMsat = decoded?.amountMsat ?: amountOverride.toULongOrNull()?.times(1000uL)
+    val amountKnown = decoded?.amountMsat != null || parseAmountToMsat(amountOverride, unit) != null
+    val payMsat = decoded?.amountMsat ?: parseAmountToMsat(amountOverride, unit)
     // Never pay until decode of the *current* invoice text has finished.
     val payEnabled = inv.isNotBlank() && decoded != null && !decoding && amountKnown
     Row(
@@ -715,8 +726,8 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
                     PayCommand.Xpay(
                         XpayParams(
                             invstring = inv.trim(),
-                            amountMsat = if (decoded?.amountMsat == null) amountOverride.toULongOrNull()?.times(1000uL) else null,
-                            maxfeeMsat = maxFee.toULongOrNull()?.times(1000uL),
+                            amountMsat = if (decoded?.amountMsat == null) parseAmountToMsat(amountOverride, unit) else null,
+                            maxfeeMsat = parseAmountToMsat(maxFee, unit),
                             layers = layers.split(",").map { it.trim() }.filter { it.isNotEmpty() },
                             retryFor = retryFor.toUIntOrNull(),
                             partialMsat = partial.toULongOrNull(),
@@ -766,6 +777,7 @@ private fun DecRow(k: String, v: String, mono: Boolean = false, orange: Boolean 
 
 @Composable
 private fun OpenChannelSheet(repository: WalletRepository, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val scope = rememberCoroutineScope()
     var peer by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
@@ -787,8 +799,16 @@ private fun OpenChannelSheet(repository: WalletRepository, onClose: () -> Unit) 
     DesignField(peer, { peer = it }, "nodeid@host:port", mono = true, lines = 2)
     Row(modifier = Modifier.padding(top = 12.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Amount (sats)", style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Dim)
-            DesignField(amount, { amount = it.filter { c -> c.isDigit() } }, "1 000 000", numeric = true, big = true)
+            Text("Amount (${unit.label})", style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Dim)
+            DesignField(
+                amount, { amount = filterAmountInput(it, unit) },
+                when (unit) {
+                    DisplayUnit.SAT -> "1 000 000"
+                    DisplayUnit.MSAT -> "1 000 000 000"
+                    DisplayUnit.BTC -> "0.01"
+                },
+                numeric = true, big = true,
+            )
         }
         Column(modifier = Modifier.width(110.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text("Min conf", style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp, fontWeight = FontWeight.Bold), color = Tokens.Dim)
@@ -810,7 +830,7 @@ private fun OpenChannelSheet(repository: WalletRepository, onClose: () -> Unit) 
     PillButton(
         if (busy) "Opening…" else "Connect & fund channel",
         modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
-        enabled = !busy && peer.isNotBlank() && amount.toULongOrNull() != null,
+        enabled = !busy && peer.isNotBlank() && parseAmountToMsat(amount, unit) != null,
     ) {
         busy = true; error = null
         scope.launch {
@@ -825,7 +845,7 @@ private fun OpenChannelSheet(repository: WalletRepository, onClose: () -> Unit) 
                 } else peer.trim()
                 node.openChannel(
                     OpenChannelParams(
-                        peerId = nodeId, amountSat = amount.toULong(), all = false,
+                        peerId = nodeId, amountSat = (parseAmountToMsat(amount, unit) ?: 0uL) / 1000uL, all = false,
                         feerate = feerate.ifBlank { null }, announce = announce, pushMsat = null,
                         closeTo = null, minconf = minconf.toUIntOrNull(), mindepth = null, reserveMsat = null,
                     ),
