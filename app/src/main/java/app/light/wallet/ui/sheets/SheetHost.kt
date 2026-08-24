@@ -62,7 +62,7 @@ import app.light.wallet.ui.DisplayUnit
 import app.light.wallet.ui.copyToClipboard
 import app.light.wallet.ui.expiresIn
 import app.light.wallet.ui.formatAmount
-import app.light.wallet.ui.formatMsatFull
+import app.light.wallet.ui.formatAmountFull
 import app.light.wallet.ui.formatUnixTime
 import app.light.wallet.ui.qrBitmap
 import app.light.wallet.ui.shortId
@@ -280,6 +280,7 @@ private fun ReceiveSheet(repository: WalletRepository, onClose: () -> Unit) {
 
 @Composable
 private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val scope = rememberCoroutineScope()
     var addr by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
@@ -308,7 +309,7 @@ private fun SendChainSheet(repository: WalletRepository, onClose: () -> Unit) {
         val available = funds?.let { it.onchainConfirmedMsat / 1000uL } ?: 0uL
         Row(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
             Text(
-                "Available: ${formatAmount(available * 1000uL, DisplayUnit.SAT)} sats",
+                "Available: ${formatAmount(available * 1000uL, unit)} ${unit.label}",
                 style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp), color = Tokens.Faint,
                 modifier = Modifier.weight(1f),
             )
@@ -576,6 +577,7 @@ private fun InvoiceResultSheet(sheet: WalletSheet.NewInvoiceResult, onClose: () 
 
 @Composable
 private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentStarted: (Long) -> Unit, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val scope = rememberCoroutineScope()
     var inv by remember { mutableStateOf(prefill) }
     var decoded by remember { mutableStateOf<DecodedInvoice?>(null) }
@@ -634,7 +636,7 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
                 .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            DecRow("Amount", if (d.amountMsat != null) formatAmount(d.amountMsat, DisplayUnit.SAT) + " sats" else "any amount")
+            DecRow("Amount", if (d.amountMsat != null) formatAmount(d.amountMsat, unit) + " " + unit.label else "any amount")
             DecRow("Description", d.description ?: d.offerDescription ?: "—")
             DecRow("Payee", shortId(d.payee, 10), mono = true)
             DecRow("Expires", expiresIn(d.createdAt?.let { c -> d.expiry?.let { e -> c + e } }), orange = true)
@@ -734,7 +736,7 @@ private fun PaySheet(repository: WalletRepository, prefill: String, onPaymentSta
             modifier = Modifier.size(15.dp),
         )
         Text(
-            "Pay" + (payMsat?.let { " " + formatAmount(it, DisplayUnit.SAT) + " sats" } ?: ""),
+            "Pay" + (payMsat?.let { " " + formatAmount(it, unit) + " " + unit.label } ?: ""),
             style = MaterialTheme.typography.labelLarge,
             color = Tokens.AccentInk,
             maxLines = 1,
@@ -869,7 +871,7 @@ private fun InvoiceDetailSheet(repository: WalletRepository, sheet: WalletSheet.
             inv.paymentPreimage?.let { Triple("Preimage", it, true) },
             Triple("Expires", formatUnixTime(inv.expiresAt), false),
             inv.paidAt?.let { Triple("Paid at", formatUnixTime(it), false) },
-            inv.amountReceivedMsat?.let { Triple("Received", formatMsatFull(it), false) },
+            inv.amountReceivedMsat?.let { Triple("Received", formatAmountFull(it, unit), false) },
         ),
     )
     inv.bolt11?.let {
@@ -900,7 +902,7 @@ private fun PaymentDetailSheet(repository: WalletRepository, sheet: WalletSheet.
             Triple("Status", p.status, false),
             Triple("Description", p.description?.ifBlank { null } ?: "—", !p.description.isNullOrBlank()),
             Triple("Destination", p.destination ?: "—", true),
-            Triple("Fee", formatMsatFull(fee), false),
+            Triple("Fee", formatAmountFull(fee, unit), false),
             Triple("Created", formatUnixTime(p.createdAt), false),
             p.completedAt?.let { Triple("Completed", formatUnixTime(it), false) },
             Triple("Payment hash", p.paymentHash, true),
@@ -914,6 +916,7 @@ private fun PaymentDetailSheet(repository: WalletRepository, sheet: WalletSheet.
 private fun ActivePaymentSheet(repository: WalletRepository, paymentId: Long, onClose: () -> Unit) {
     // Live: keeps rendering the latest state of this payment while it routes.
     val active by repository.activePayments.collectAsState()
+    val unit = DisplayUnit.from(repository.displayUnit)
     val p = active.firstOrNull { it.id == paymentId }
     SheetTitle("Payment", onClose)
     if (p == null) {
@@ -937,7 +940,7 @@ private fun ActivePaymentSheet(repository: WalletRepository, paymentId: Long, on
             )
         }
         Text(
-            p.amountMsat?.let { "−" + formatAmount(it, DisplayUnit.SAT) + " sats" }
+            p.amountMsat?.let { "−" + formatAmount(it, unit) + " " + unit.label }
                 ?: when (p.status) {
                     ActivePaymentStatus.PAYING -> "Routing…"
                     ActivePaymentStatus.PENDING -> "Pending — still in flight"
@@ -958,7 +961,7 @@ private fun ActivePaymentSheet(repository: WalletRepository, paymentId: Long, on
             Triple("Status", p.status.name.lowercase(), false),
             p.description?.let { Triple("Description", it, false) },
             Triple("Invoice", shortId(p.invstring, 20), true),
-            p.feeMsat?.let { Triple("Fee", formatMsatFull(it), false) },
+            p.feeMsat?.let { Triple("Fee", formatAmountFull(it, unit), false) },
             p.preimage?.let { Triple("Preimage", it, true) },
             p.error?.let { Triple("Error", it, false) },
         ),
@@ -972,6 +975,7 @@ private fun ChannelDetailSheet(
     sheet: WalletSheet.ChannelDetail,
     onClose: () -> Unit,
 ) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val scope = rememberCoroutineScope()
     val ch = sheet.channel
     var confirmClose by remember { mutableStateOf(false) }
@@ -982,11 +986,11 @@ private fun ChannelDetailSheet(
     SheetTitle("Channel", onClose)
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(bottom = 14.dp)) {
         Text(
-            formatAmount(ch.spendableMsat, DisplayUnit.SAT) + " sats",
+            formatAmount(ch.spendableMsat, unit) + " " + unit.label,
             style = MaterialTheme.typography.displaySmall.copy(fontSize = 30.sp),
         )
         Text(
-            "spendable of ${formatAmount(ch.totalMsat, DisplayUnit.SAT)} capacity",
+            "spendable of ${formatAmount(ch.totalMsat, unit)} capacity",
             style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.5.sp), color = Tokens.Faint,
             modifier = Modifier.padding(top = 3.dp),
         )
@@ -997,13 +1001,13 @@ private fun ChannelDetailSheet(
             Triple("State", ch.state, false),
             Triple("Connected", if (ch.peerConnected) "yes" else "no", false),
             ch.shortChannelId?.let { Triple("Short id", it, true) },
-            Triple("Capacity", formatMsatFull(ch.totalMsat), false),
-            Triple("Ours", formatMsatFull(ch.toUsMsat), false),
-            Triple("Theirs", formatMsatFull(ch.toThemMsat), false),
-            Triple("Spendable", formatMsatFull(ch.spendableMsat), false),
-            Triple("Receivable", formatMsatFull(ch.receivableMsat), false),
-            ch.ourReserveMsat?.let { Triple("Our reserve", formatMsatFull(it), false) },
-            ch.feeBaseMsat?.let { Triple("Fee base", formatMsatFull(it), false) },
+            Triple("Capacity", formatAmountFull(ch.totalMsat, unit), false),
+            Triple("Ours", formatAmountFull(ch.toUsMsat, unit), false),
+            Triple("Theirs", formatAmountFull(ch.toThemMsat, unit), false),
+            Triple("Spendable", formatAmountFull(ch.spendableMsat, unit), false),
+            Triple("Receivable", formatAmountFull(ch.receivableMsat, unit), false),
+            ch.ourReserveMsat?.let { Triple("Our reserve", formatAmountFull(it, unit), false) },
+            ch.feeBaseMsat?.let { Triple("Fee base", formatAmountFull(it, unit), false) },
             ch.feeProportionalMillionths?.let { Triple("Fee ppm", it.toString(), false) },
             Triple("Opener", ch.opener, false),
             ch.fundingTxid?.let { Triple("Funding txid", it, true) },
@@ -1042,6 +1046,7 @@ private fun ChannelDetailSheet(
 
 @Composable
 private fun NodeSheet(repository: WalletRepository, onClose: () -> Unit) {
+    val unit = DisplayUnit.from(repository.displayUnit)
     val context = LocalContext.current
     val connState by repository.connState.collectAsState()
     val info = (connState as? ConnState.Connected)?.info
@@ -1060,7 +1065,7 @@ private fun NodeSheet(repository: WalletRepository, onClose: () -> Unit) {
             Triple("Peers", info.numPeers.toString(), false),
             Triple("Active channels", info.numActiveChannels.toString(), false),
             Triple("Connect string", info.connectString, true),
-            Triple("Fees collected", formatMsatFull(info.feesCollectedMsat), false),
+            Triple("Fees collected", formatAmountFull(info.feesCollectedMsat, unit), false),
         ),
     )
 }

@@ -35,9 +35,28 @@ fun formatMsatAsSat(msat: ULong?): String =
     if (msat == null) "—"
     else String.format(Locale.US, "%,d sat", (msat / 1000uL).toLong()).replace(',', ' ')
 
-fun formatMsatFull(msat: ULong?): String =
-    if (msat == null) "—"
-    else String.format(Locale.US, "%,d msat", msat.toLong()).replace(',', ' ')
+/**
+ * Full-precision amount in the user's display unit, label included.
+ * Sub-sat precision is never silently dropped: a 312 msat fee shows as
+ * "0.312 sats", not "0 sats".
+ */
+fun formatAmountFull(msat: ULong?, unit: DisplayUnit): String {
+    if (msat == null) return "—"
+    val value = when (unit) {
+        DisplayUnit.MSAT ->
+            String.format(Locale.US, "%,d", msat.toLong()).replace(',', ' ')
+        DisplayUnit.SAT -> {
+            val whole = String.format(Locale.US, "%,d", (msat / 1000uL).toLong()).replace(',', ' ')
+            val rem = (msat % 1000uL).toLong()
+            if (rem == 0L) whole
+            else whole + "." + String.format(Locale.US, "%03d", rem).trimEnd('0')
+        }
+        DisplayUnit.BTC ->
+            String.format(Locale.US, "%.11f", msat.toLong() / 100_000_000_000.0)
+                .trimEnd('0').trimEnd('.')
+    }
+    return "$value ${unit.label}"
+}
 
 fun satsToBtcLine(msat: ULong?): String =
     if (msat == null) "" else String.format(Locale.US, "%.8f", msat.toLong() / 100_000_000_000.0)
