@@ -9,7 +9,7 @@
 # build compiles the Rust core automatically.
 set -euo pipefail
 
-# Must match ndkVersion in app/build.gradle.kts.
+# Must match ndkVersion in android/build.gradle.kts.
 NDK_VERSION="27.2.12479018"
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -84,7 +84,7 @@ command -v protoc >/dev/null 2>&1 || {
 step "Building release APK (compiles the Rust core too)"
 ./gradlew :app:assembleRelease
 
-[ "${1:-}" = "--build" ] && { step "Done (build only). APK: app/build/outputs/apk/release/"; exit 0; }
+[ "${1:-}" = "--build" ] && { step "Done (build only). APK: android/build/outputs/apk/release/"; exit 0; }
 
 # ---------------------------------------------------------------- Emulator
 step "Looking for a device/emulator"

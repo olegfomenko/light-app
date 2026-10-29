@@ -11,8 +11,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CORE="$ROOT/core"
-JNILIBS="$ROOT/app/src/main/jniLibs"
-KOTLIN_OUT="$ROOT/app/src/main/java"
+JNILIBS="$ROOT/android/src/main/jniLibs"
+KOTLIN_OUT="$ROOT/android/src/main/java"
 
 if [ -z "${ANDROID_NDK_HOME:-}" ]; then
   NDK_DIR="${ANDROID_HOME:-$HOME/Library/Android/sdk}/ndk"
@@ -42,4 +42,4 @@ cargo run --features cli --bin uniffi-bindgen -- \
     --out-dir "$KOTLIN_OUT" \
     --no-format
 
-echo "==> Done. Bindings at app/src/main/java/app/light/wallet/core/"
+echo "==> Done. Bindings at android/src/main/java/app/light/wallet/core/"

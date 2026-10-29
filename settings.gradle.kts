@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "LightApp"
 include(":app")
+project(":app").projectDir = file("android")

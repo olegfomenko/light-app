@@ -1,6 +1,7 @@
 # LightApp — a Lightning wallet that doesn't hide your node
 
-An Android wallet (Kotlin + Jetpack Compose) built on Blockstream
+A mobile wallet for Android (Kotlin + Jetpack Compose) and iOS (Swift +
+SwiftUI) built on Blockstream
 **[Greenlight](https://blockstream.github.io/greenlight/)**. Unlike custodial or
 LSP-abstracted wallets, LightApp gives you a **full Core Lightning node** whose
 keys live only on your phone: Greenlight runs the node in the cloud, but every
@@ -129,10 +130,16 @@ a clean UI, instead of a locked-down "balance and a send button".
 ```
 core/       Rust crate `lightcore` — wraps Blockstream's gl-client 0.6 and
             exposes a mobile-friendly API over UniFFI. Holds the signer, does
-            seed derivation, and maps every CLN RPC to a Kotlin-friendly model.
-app/        Android app (package app.light.wallet), Jetpack Compose UI.
-scripts/    bootstrap.sh (one-shot host setup + build) and build-rust.sh
-            (cross-compiles the .so + regenerates the UniFFI Kotlin bindings).
+            seed derivation, and maps every CLN RPC to a platform-friendly
+            model. ONE core serves both apps: UniFFI generates the Kotlin and
+            the Swift bindings from the same crate.
+android/    Android app (package app.light.wallet), Jetpack Compose UI.
+ios/        iOS app (bundle app.light.wallet), SwiftUI. Mirrors the Android
+            architecture: same repository/single-flight data layer, same
+            screens, same design tokens.
+scripts/    bootstrap.sh (Android host setup + build), build-rust.sh (Android
+            .so + Kotlin bindings), build-rust-ios.sh (iOS static libs +
+            Swift bindings + LightCore.xcframework).
 design/     Snapshot of the reference design (see Design credit below).
 ```
 
@@ -142,7 +149,7 @@ shows the data. The Main tab auto-refreshes every 30 s; other tabs refresh on
 entry and via pull-to-refresh. The node + signer are released when the app is
 backgrounded (unless a payment is dispatching) and re-scheduled on foreground.
 
-## Building
+## Building (Android)
 
 ### Requirements
 
@@ -199,7 +206,7 @@ safe to re-run and only downloads what you do not already have.
 
 The first run takes a while, mostly compiling the Rust core and its
 dependencies. When it finishes you have an APK at
-`app/build/outputs/apk/release/`.
+`android/build/outputs/apk/release/`.
 
 > Linux: the script assumes macOS paths and Homebrew. Install the NDK
 > yourself with `sdkmanager "ndk;27.2.12479018"`, then run
@@ -207,7 +214,7 @@ dependencies. When it finishes you have an APK at
 
 ### Release signing
 
-Release builds are signed with your own key when `app/keystore.properties`
+Release builds are signed with your own key when `android/keystore.properties`
 exists (it is git-ignored):
 
 ```properties
@@ -227,6 +234,61 @@ keytool -genkeypair -v -keystore ~/lightapp-upload.jks \
 Without that file, `assembleRelease` falls back to the public Android debug key
 so a locally built APK still installs on your own device. `bundleRelease`, which
 produces the Play Store bundle, refuses to build without a real key.
+
+## Building (iOS)
+
+The iOS app lives in `ios/` and shares the same Rust core.
+
+### Requirements
+
+- A Mac with **Xcode 16 or newer** (`xcodebuild -license accept` once after
+  installing), plus **Rust** and **protoc** from the Android steps above.
+- An iPhone on iOS 17+ (or the bundled simulator).
+
+### 1. One-time setup
+
+```bash
+rustup target add aarch64-apple-ios aarch64-apple-ios-sim
+./scripts/build-rust-ios.sh   # first build of the core (~5 min); Xcode keeps
+                              # it fresh automatically afterwards
+```
+
+### 2. Open and run
+
+`ios/LightApp.xcodeproj` is committed — just open it:
+
+```bash
+open ios/LightApp.xcodeproj
+```
+
+The project file is *generated* from `ios/project.yml`. You only need XcodeGen
+when you add, remove, or move Swift files (Xcode edits alone don't require it):
+
+```bash
+brew install xcodegen && cd ios && xcodegen generate
+```
+
+Select your team under **Signing & Capabilities** (a free Apple ID works for
+personal installs), pick your iPhone or a simulator, and press **Run**. An
+Xcode build phase runs `scripts/build-rust-ios.sh` automatically — it
+cross-compiles `lightcore` for device + simulator, regenerates the Swift
+bindings, and packages `ios/LightCore/LightCore.xcframework`. All of that is
+generated and git-ignored, same as the Android bindings.
+
+To install on a physical iPhone with a free Apple ID, the app must be re-signed
+every 7 days (Apple's limit for free provisioning); a paid developer account
+lifts that to a year.
+
+### iOS security notes
+
+The iOS build mirrors the Android security model with platform equivalents:
+seed + Greenlight credentials in the **Keychain**
+(`kSecAttrAccessibleWhenUnlockedThisDeviceOnly` — device-lock gated, never
+leaves the device, excluded from cloud restore), non-secrets in UserDefaults,
+sensitive clipboard entries expire after 60 s, and the app covers its content
+when backgrounded so the seed never appears in the app switcher. One honest
+difference: **iOS provides no `FLAG_SECURE` equivalent, so screenshots of the
+seed screen cannot be blocked** — reveal it in private.
 
 ## Security
 
@@ -253,7 +315,7 @@ The visual language is adapted from **"Crypto Wallet App UI Template" by
 [DSCODE](https://www.figma.com/community/file/1540673463269508643)** (Figma
 Community). `design/lightning-wallet.dc.html` is a local snapshot of the
 LightApp-specific design. Fonts (Manrope, Space Grotesk, JetBrains Mono) are
-bundled under `app/src/main/res/font/`.
+bundled under `android/src/main/res/font/`.
 
 ## Contributing
 

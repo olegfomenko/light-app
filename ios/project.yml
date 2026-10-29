@@ -1,0 +1,62 @@
+name: LightApp
+options:
+  bundleIdPrefix: app.light
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    MARKETING_VERSION: 0.1.0
+    CURRENT_PROJECT_VERSION: 1
+    OTHER_LDFLAGS: "-lc++"
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": x86_64
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+targets:
+  LightApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: LightApp
+      - path: LightCore/Generated/lightcore.swift
+    dependencies:
+      - framework: LightCore/LightCore.xcframework
+        embed: false
+    info:
+      path: LightApp/Info.plist
+      properties:
+        CFBundleDisplayName: LightApp
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIAppFonts:
+          - manrope_regular.ttf
+          - manrope_medium.ttf
+          - manrope_semibold.ttf
+          - manrope_bold.ttf
+          - manrope_extrabold.ttf
+          - space_grotesk_regular.ttf
+          - space_grotesk_medium.ttf
+          - space_grotesk_semibold.ttf
+          - space_grotesk_bold.ttf
+          - jetbrains_mono_regular.ttf
+          - jetbrains_mono_medium.ttf
+          - jetbrains_mono_semibold.ttf
+          - jetbrains_mono_bold.ttf
+        ITSAppUsesNonExemptEncryption: false
+    preBuildScripts:
+      - name: Build Rust core
+        script: |
+          cd "$SRCROOT/.."
+          ./scripts/build-rust-ios.sh
+        basedOnDependencyAnalysis: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.light.wallet
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
